@@ -84,7 +84,7 @@
            </spacer>
           </item>
           <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="serialized_btn">
             <property name="text">
              <string>See Serialized Inventory</string>
             </property>
@@ -112,7 +112,7 @@
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="1" column="1">
-           <widget class="QPushButton" name="back_btn">
+           <widget class="QPushButton" name="back_btn_search_result">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -125,7 +125,7 @@
            </widget>
           </item>
           <item row="0" column="0" colspan="3">
-           <widget class="QTableWidget" name="data_table">
+           <widget class="QTableWidget" name="search_result_table">
             <column>
              <property name="text">
               <string>id</string>
@@ -251,7 +251,7 @@
              </widget>
             </item>
             <item row="8" column="2">
-             <widget class="QPushButton" name="search_button">
+             <widget class="QPushButton" name="submit_search_btn">
               <property name="text">
                <string>Search</string>
               </property>
@@ -362,7 +362,7 @@
       <widget class="QWidget" name="serialized_page">
        <layout class="QGridLayout" name="gridLayout_8">
         <item row="0" column="0" colspan="3">
-         <widget class="QTableWidget" name="serialized_data">
+         <widget class="QTableWidget" name="serial_table">
           <column>
            <property name="text">
             <string>Make</string>
@@ -404,7 +404,7 @@
          </spacer>
         </item>
         <item row="1" column="1">
-         <widget class="QPushButton" name="back_btn_2">
+         <widget class="QPushButton" name="back_btn_serial">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -652,7 +652,7 @@
          </spacer>
         </item>
         <item row="0" column="1">
-         <widget class="QTableWidget" name="data_table_5">
+         <widget class="QTableWidget" name="customer_table_1">
           <property name="maximumSize">
            <size>
             <width>251</width>
@@ -724,7 +724,7 @@
         <item row="0" column="2" colspan="2">
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QTableWidget" name="data_table_4">
+           <widget class="QTableWidget" name="customer_table_2">
             <property name="maximumSize">
              <size>
               <width>241</width>
@@ -794,7 +794,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="layaway_btn">
             <property name="maximumSize">
              <size>
               <width>151</width>
@@ -831,7 +831,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTableWidget" name="tableWidget">
+           <widget class="QTableWidget" name="phone_tbox">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -852,7 +852,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTextBrowser" name="textBrowser_4"/>
+           <widget class="QTextBrowser" name="notes_tbox"/>
           </item>
          </layout>
         </item>
@@ -866,7 +866,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTableWidget" name="tableWidget_2">
+           <widget class="QTableWidget" name="transactions_table">
             <property name="minimumSize">
              <size>
               <width>521</width>
@@ -931,7 +931,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTableWidget" name="tableWidget_3">
+           <widget class="QTableWidget" name="sro_table">
             <property name="maximumSize">
              <size>
               <width>401</width>
