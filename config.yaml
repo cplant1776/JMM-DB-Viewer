@@ -1,0 +1,2 @@
+# Which SQlite to connect to
+local_database_path: [LOCAL .db FILE]

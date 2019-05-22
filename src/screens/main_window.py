@@ -45,8 +45,8 @@ class Ui_MainWindow(object):
         self.search_btn = QtWidgets.QPushButton(self.start_page)
         self.search_btn.setObjectName("search_btn")
         self.gridLayout.addWidget(self.search_btn, 1, 1, 1, 1)
-        # self.search_btn.clicked.connect(self.stackedWidget.go_to_search_screen)
-        self.search_btn.clicked.connect(self.stackedWidget.go_to_tester)
+        self.search_btn.clicked.connect(self.stackedWidget.go_to_search_screen)
+        # self.search_btn.clicked.connect(self.stackedWidget.go_to_tester)
 
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem1, 2, 0, 1, 1)
