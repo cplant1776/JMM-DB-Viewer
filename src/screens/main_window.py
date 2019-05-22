@@ -8,11 +8,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from screens.screen_functions.stacked_widget_subclass import MyStackWidget
+from src.screens.screen_functions.stacked_widget_subclass import MyStackWidget
 
 
 class Ui_MainWindow(object):
-
     def setupUi(self, MainWindow):
 
         # =================================================================================

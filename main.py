@@ -1,9 +1,7 @@
 import sys
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget
-from PyQt5.QtCore import QSize    
+from PyQt5 import QtWidgets
 
-from screens.main_window import Ui_MainWindow
+from src.screens.main_window import Ui_MainWindow
 # from screens.transaction_screen import TransactionScreen
 # from screens.screen_functions.start_screen import add_start_screen_widgets
 
