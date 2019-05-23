@@ -7,11 +7,18 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from functools import partial
 
 from src.screens.screen_functions.stacked_widget_subclass import MyStackWidget
+from src.db_con import DBCon
 
 
 class Ui_MainWindow(object):
+
+    def __init__(self):
+        pass
+
+
     def setupUi(self, MainWindow):
 
         # =================================================================================
@@ -45,8 +52,7 @@ class Ui_MainWindow(object):
         self.search_btn = QtWidgets.QPushButton(self.start_page)
         self.search_btn.setObjectName("search_btn")
         self.gridLayout.addWidget(self.search_btn, 1, 1, 1, 1)
-        self.search_btn.clicked.connect(self.stackedWidget.go_to_search_screen)
-        # self.search_btn.clicked.connect(self.stackedWidget.go_to_tester)
+        self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
 
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem1, 2, 0, 1, 1)
@@ -59,7 +65,7 @@ class Ui_MainWindow(object):
         self.serialized_btn = QtWidgets.QPushButton(self.start_page)
         self.serialized_btn.setObjectName("serialized_btn")
         self.gridLayout.addWidget(self.serialized_btn, 3, 1, 1, 1)
-        self.serialized_btn.clicked.connect(self.stackedWidget.go_to_serial_screen)
+        self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
 
 
         spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -85,8 +91,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.back_btn_search_result.sizePolicy().hasHeightForWidth())
         self.back_btn_search_result.setSizePolicy(sizePolicy)
         self.back_btn_search_result.setObjectName("back_btn_search_result")
-        self.back_btn_search_result.clicked.connect(self.stackedWidget.go_to_search_screen)
+        self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.gridLayout_2.addWidget(self.back_btn_search_result, 1, 1, 1, 1)
+        self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
 
 
         # Search Result Table
@@ -151,6 +158,7 @@ class Ui_MainWindow(object):
         self.label_5 = QtWidgets.QLabel(self.search_page)
         self.label_5.setObjectName("label_5")
         self.gridLayout_7.addWidget(self.label_5, 4, 2, 1, 1, QtCore.Qt.AlignHCenter)
+        self.submit_search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search_result'))
 
         # General Search Field
         self.general_search = QtWidgets.QLineEdit(self.search_page)
@@ -250,6 +258,7 @@ class Ui_MainWindow(object):
         self.back_btn_serial.setMaximumSize(QtCore.QSize(200, 16777215))
         self.back_btn_serial.setObjectName("back_btn_serial")
         self.gridLayout_8.addWidget(self.back_btn_serial, 1, 1, 1, 1)
+        self.back_btn_serial.clicked.connect(self.stackedWidget.go_to_previous_screen)
 
         spacerItem12 = QtWidgets.QSpacerItem(406, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout_8.addItem(spacerItem12, 1, 2, 1, 1)
@@ -461,6 +470,7 @@ class Ui_MainWindow(object):
         self.layaway_btn.setMaximumSize(QtCore.QSize(151, 121))
         self.layaway_btn.setObjectName("layaway_btn")
         self.horizontalLayout_7.addWidget(self.layaway_btn)
+        self.layaway_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search_result'))
 
         spacerItem16 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_7.addItem(spacerItem16)
