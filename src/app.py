@@ -20,6 +20,7 @@ class App:
         main_window = QtWidgets.QMainWindow()
         ui = Ui_MainWindow()
         ui.setupUi(main_window)
+        ui.bind_buttons()
         return main_window
 
 

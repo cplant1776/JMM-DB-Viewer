@@ -1,2 +1,3 @@
 # Which SQlite to connect to
-local_database_path: [LOCAL .db FILE]
+#local_database_path: [LOCAL .db FILE]
+local_database_path: jmm_db.db

@@ -27,3 +27,10 @@ class MyStackWidget(QtWidgets.QStackedWidget):
         tmp = self.currentIndex()
         self.setCurrentIndex(self.previous_screen_index)
         self.previous_screen_index = tmp
+
+    def run_search(self):
+        if self.general_radio.isChecked():
+            print("checked!")
+        else:
+            print("NOT checked")
+        # self.go_to_screen(screen='search')
