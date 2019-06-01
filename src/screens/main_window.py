@@ -6,25 +6,37 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from functools import partial
 
+# Standard Library Imports
+from functools import partial
+# Third Party Imports
+from PyQt5 import QtCore, QtGui, QtWidgets
+# Local Imports
+from src.config import SETTINGS
+from src.db_con import DBCon
 from src.screens.screen_functions.stacked_widget_subclass import MyStackWidget
 
 
 class Ui_MainWindow(object):
 
     def __init__(self):
-        pass
+        self.db_con = DBCon(db_loc=SETTINGS['local_database_path'])
 
     def bind_buttons(self):
         self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
-        self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
-        self.submit_search_btn.clicked.connect(self.stackedWidget.run_search)
-        self.back_btn_serial.clicked.connect(self.stackedWidget.go_to_previous_screen)
-        self.layaway_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search_result'))
+        self.submit_search_btn.clicked.connect(partial(self.run_search))
+        self.back_btn_serial.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
+        # self.layaway_btn.clicked.connect(self.run_search)
+
+    def run_search(self):
+        if self.general_radio.isChecked():
+            print("checked!")
+            self.db_con.general_search('JOHN')
+        else:
+            print("NOT checked")
+        self.stackedWidget.go_to_screen(screen='search_result')
 
 
     def setupUi(self, MainWindow):

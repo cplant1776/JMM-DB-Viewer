@@ -1,3 +1,18 @@
 # Which SQlite to connect to
 #local_database_path: [LOCAL .db FILE]
 local_database_path: jmm_db.db
+general_search_query:
+#  number: SELECT * FROM customer WHERE CONCAT(cell_phone, home_phone, work_phone) LIKE '%?%'
+#  number: SELECT * FROM customer WHERE cell_phone LIKE '%?%' OR home_phone LIKE LIKE '%?%' OR work_phone LIKE '%?%'
+  number:
+    - SELECT * FROM customer WHERE cell_phone=?
+    - SELECT * FROM customer WHERE home_phone=?
+    - SELECT * FROM customer WHERE work_phone=?
+  first: SELECT * FROM customer WHERE first_name=?
+  last: SELECT * FROM customer WHERE last_name=?
+  company: SELECT * FROM customer WHERE company=?
+  customer_id: SELECT * FROM customer WHERE customer_id=?
+  sale_id: SELECT * FROM sale WHERE sale_id=?
+  layaway_id: SELECT * FROM layaway WHERE layaway_id=?
+  service_id: SELECT * FROM service WHERE service_id=?
+  serial_num: SELECT * FROM machine_sale WHERE serial_num=?

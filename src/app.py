@@ -3,7 +3,6 @@ import sys
 # Third Party Imports
 from PyQt5 import QtWidgets
 # Local Imports
-from src.db_con import DBCon
 from src.screens.main_window import Ui_MainWindow
 from src.config import SETTINGS
 
@@ -12,7 +11,6 @@ class App:
     def __init__(self):
         self.app = QtWidgets.QApplication(sys.argv)
         self.main_window = self.setup_main_window()
-        self.db_con = DBCon(db_loc=SETTINGS['local_database_path'])
         self.main_window.show()
 
     @staticmethod

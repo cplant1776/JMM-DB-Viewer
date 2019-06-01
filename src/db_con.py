@@ -2,6 +2,7 @@
 # Third Party Imports
 import sqlite3
 # Local Imports
+from src.config import SETTINGS
 
 # ==============================================================
 # Main
@@ -12,9 +13,68 @@ class DBCon:
     def __init__(self, db_loc):
         self.conn = sqlite3.connect(db_loc)
         self.cursor = self.conn.cursor()
+        self.general_search_results = []
 
     def execute_custom_query(self, query=""):
         self.cursor.execute(query)
+
+    def fetch_cursor(self):
+        return self.cursor.fetchall()
+
+    def search_by_number(self, number):
+        self.cursor.execute('''
+        SELECT *
+        FROM customer
+        WHERE CONCAT(cell_phone, home_phone, work_phone) LIKE '%?%'
+        ''', number)
+        return self.fetch_cursor()
+
+    def search_by_first_name(self, name):
+        self.cursor.execute('''
+        SELECT *
+        FROM customer
+        WHERE first_name LIKE '%?%'
+        ''', name)
+        return self.fetch_cursor()
+
+    def search_by_last_name(self, name):
+        self.cursor.execute('''
+        SELECT *
+        FROM customer
+        WHERE last_name LIKE '%?%'
+        ''', name)
+        return self.fetch_cursor()
+
+    def run_general_query(self, query, query_type, term):
+
+        print("Executing: {}".format(query))
+        self.cursor.execute(query, term)
+        result = self.fetch_cursor()
+        if result:
+            self.general_search_results.append(GeneralResult(result=result, query_type=query_type))
+
+    def general_search(self, term):
+        term = (term,)
+        self.general_search_results = []
+        for query_type, queries in SETTINGS['general_search_query'].items():
+            if isinstance(queries, str):
+                self.run_general_query(queries, query_type, term)
+            else:
+                for query in queries:
+                    self.run_general_query(query, query_type, term)
+
+
+class GeneralResult:
+    def __init__(self, result, query_type):
+        self.result = result
+        self.query_type = query_type
+
+    def get_result(self):
+        return self.result
+
+    def get_query_type(self):
+        return self.query_type
+
 
 
 # # Never do this -- insecure!
