@@ -25,24 +25,24 @@ class DBCon:
         self.cursor.execute('''
         SELECT *
         FROM customer
-        WHERE CONCAT(cell_phone, home_phone, work_phone) LIKE '%?%'
-        ''', number)
+        WHERE cell_phone=? OR home_phone=? OR work_phone=?
+        ''', (number, number, number))
         return self.fetch_cursor()
 
     def search_by_first_name(self, name):
         self.cursor.execute('''
         SELECT *
         FROM customer
-        WHERE first_name LIKE '%?%'
-        ''', name)
+        WHERE first_name=?
+        ''', (name,))
         return self.fetch_cursor()
 
     def search_by_last_name(self, name):
         self.cursor.execute('''
         SELECT *
         FROM customer
-        WHERE last_name LIKE '%?%'
-        ''', name)
+        WHERE last_name=?
+        ''', (name,))
         return self.fetch_cursor()
 
     def run_general_query(self, query, query_type, term):
@@ -54,7 +54,6 @@ class DBCon:
             self.general_search_results.append(GeneralResult(result=result, query_type=query_type))
 
     def general_search(self, term):
-        term = (term,)
         self.general_search_results = []
         for query_type, queries in SETTINGS['general_search_query'].items():
             if isinstance(queries, str):

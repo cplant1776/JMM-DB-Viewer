@@ -32,12 +32,22 @@ class Ui_MainWindow(object):
 
     def run_search(self):
         if self.general_radio.isChecked():
-            print("checked!")
-            self.db_con.general_search('JOHN')
-        else:
-            print("NOT checked")
-        self.stackedWidget.go_to_screen(screen='search_result')
-
+            term = (self.general_search.text(),)
+            print("General search: {}".format(term[0]))
+            self.db_con.general_search(term)
+        elif self.first_radio.isChecked():
+            first = self.first_search.text()
+            print("First name search: {}".format(first))
+            self.db_con.search_by_first_name(first)
+        elif self.last_radio.isChecked():
+            last = self.last_search.text()
+            print("Last name search: {}".format(last))
+            self.db_con.search_by_last_name(last)
+        elif self.phone_radio.isChecked():
+            num = self.phone_search.text()
+            print("Phone search: {}".format(num))
+            self.db_con.search_by_number(num)
+        # self.stackedWidget.go_to_screen(screen='search_result')
 
     def setupUi(self, MainWindow):
 
