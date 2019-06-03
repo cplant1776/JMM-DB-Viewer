@@ -31,23 +31,39 @@ class Ui_MainWindow(object):
         # self.layaway_btn.clicked.connect(self.run_search)
 
     def run_search(self):
+
+        # Run appropriate query and store result
+        is_general_search = False
         if self.general_radio.isChecked():
             term = (self.general_search.text(),)
             print("General search: {}".format(term[0]))
-            self.db_con.general_search(term)
+            result = self.db_con.general_search(term)
+            is_general_search = True
         elif self.first_radio.isChecked():
             first = self.first_search.text()
             print("First name search: {}".format(first))
-            self.db_con.search_by_first_name(first)
+            result = self.db_con.search_by_first_name(first)
         elif self.last_radio.isChecked():
             last = self.last_search.text()
             print("Last name search: {}".format(last))
-            self.db_con.search_by_last_name(last)
+            result = self.db_con.search_by_last_name(last)
         elif self.phone_radio.isChecked():
             num = self.phone_search.text()
             print("Phone search: {}".format(num))
-            self.db_con.search_by_number(num)
-        # self.stackedWidget.go_to_screen(screen='search_result')
+            result = self.db_con.search_by_number(num)
+
+        self.populate_search_result(result=result, is_general_search=is_general_search)
+        self.stackedWidget.go_to_screen(screen='search_result')
+
+    def populate_search_result(self, result, is_general_search=False):
+        if is_general_search:
+            # TODO: Implement general result screen for deciding which data to list
+            pass
+        else:
+            self.search_result_table.setRowCount(len(result))
+            for row, r in enumerate(result):
+                for col, item in enumerate(r):
+                    self.search_result_table.setItem(row, col, QtWidgets.QTableWidgetItem(item))
 
     def setupUi(self, MainWindow):
 
@@ -121,9 +137,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.back_btn_search_result.sizePolicy().hasHeightForWidth())
         self.back_btn_search_result.setSizePolicy(sizePolicy)
         self.back_btn_search_result.setObjectName("back_btn_search_result")
-        # self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.gridLayout_2.addWidget(self.back_btn_search_result, 1, 1, 1, 1)
-        # self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
 
 
         # Search Result Table
@@ -615,6 +629,8 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+
+        # Retranslate UI & connect signals
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -631,15 +647,15 @@ class Ui_MainWindow(object):
         item = self.search_result_table.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "First"))
         item = self.search_result_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Home Phone"))
+        item.setText(_translate("MainWindow", "Address"))
         item = self.search_result_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Work Phone"))
+        item.setText(_translate("MainWindow", "City"))
         item = self.search_result_table.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "Company"))
+        item.setText(_translate("MainWindow", "State"))
         item = self.search_result_table.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Last Active"))
+        item.setText(_translate("MainWindow", "Zip"))
         item = self.search_result_table.horizontalHeaderItem(7)
-        item.setText(_translate("MainWindow", "Added"))
+        item.setText(_translate("MainWindow", "Home Phone"))
         self.label_4.setText(_translate("MainWindow", "Phone #"))
         self.submit_search_btn.setText(_translate("MainWindow", "Search"))
         self.label_5.setText(_translate("MainWindow", "Last Name"))

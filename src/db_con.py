@@ -61,6 +61,7 @@ class DBCon:
             else:
                 for query in queries:
                     self.run_general_query(query, query_type, term)
+        return self.general_search_results
 
 
 class GeneralResult:
