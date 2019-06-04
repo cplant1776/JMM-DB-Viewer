@@ -65,6 +65,30 @@ class Ui_MainWindow(object):
                 for col, item in enumerate(r):
                     self.search_result_table.setItem(row, col, QtWidgets.QTableWidgetItem(item))
 
+    def go_to_item_page(self):
+        # Determine result type (customer/layaway/SRO/sale)
+        # Populate appropriate page
+        # Go to page
+        pass
+
+    def go_to_customer_page(self):
+        # Find selected row
+        selected_row = self.search_result_table.selectedItems()[0].row()
+        # Find customer id on selected row (1st col)
+        cust_id = self.search_result_table.itemAt(selected_row, 1).text()
+        print("Selected row: {} ==> cust id: {}".format(selected_row, cust_id))
+        # Fill in destination page information
+        self.populate_customer_page(id=cust_id)
+        # Go to destination page
+        self.stackedWidget.go_to_screen('customer')
+
+    def populate_customer_page(self, id):
+        # Fill in Basic info
+        # Generate potential phone numbers and fill
+        # Fill in SRO
+        # Fill in transactions
+        print("Populated cusotmer page")
+
     def setupUi(self, MainWindow):
 
         # =================================================================================
@@ -145,6 +169,11 @@ class Ui_MainWindow(object):
         self.search_result_table.setObjectName("search_result_table")
         self.search_result_table.setColumnCount(8)
         self.search_result_table.setRowCount(0)
+        # Disable cell editing
+        self.search_result_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        # Connect double click signal to function
+        self.search_result_table.itemDoubleClicked.connect(self.go_to_item_page)
+
         item = QtWidgets.QTableWidgetItem()
         self.search_result_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
