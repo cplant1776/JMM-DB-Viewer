@@ -69,13 +69,14 @@ class Ui_MainWindow(object):
         # Determine result type (customer/layaway/SRO/sale)
         # Populate appropriate page
         # Go to page
+        self.go_to_customer_page()
         pass
 
     def go_to_customer_page(self):
         # Find selected row
         selected_row = self.search_result_table.selectedItems()[0].row()
         # Find customer id on selected row (1st col)
-        cust_id = self.search_result_table.itemAt(selected_row, 1).text()
+        cust_id = self.search_result_table.item(selected_row, 0).text()
         print("Selected row: {} ==> cust id: {}".format(selected_row, cust_id))
         # Fill in destination page information
         self.populate_customer_page(id=cust_id)
@@ -83,11 +84,55 @@ class Ui_MainWindow(object):
         self.stackedWidget.go_to_screen('customer')
 
     def populate_customer_page(self, id):
+        customer_data = self.db_con.search_by_customer_id(id)[0]
         # Fill in Basic info
+        self.fill_customer_page_basic_info_tables(customer_data)
         # Generate potential phone numbers and fill
+        self.fill_potential_phone_numbers(customer_data)
+        # Fill in notes
+        self.notes_tbox.setText(customer_data[SETTINGS['tuple_dicts']['customer']['notes']])
         # Fill in SRO
         # Fill in transactions
         print("Populated cusotmer page")
+
+    def fill_customer_page_basic_info_tables(self, customer_data):
+        # Table 1 - ID/First/Last/Company/Email
+        self.customer_table_1.setItem(
+            0, 0, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['customer_id']]))
+        self.customer_table_1.setItem(
+            0, 1, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['first_name']]))
+        self.customer_table_1.setItem(
+            0, 2, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['last_name']]))
+        self.customer_table_1.setItem(
+            0, 3, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['company']]))
+        self.customer_table_1.setItem(
+            0, 4, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['email']]))
+        # Table 2 - Addr/City/ST/Zip/Last Activity
+        self.customer_table_2.setItem(
+            0, 0, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['address']]))
+        self.customer_table_2.setItem(
+            0, 1, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['city']]))
+        self.customer_table_2.setItem(
+            0, 2, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['state']]))
+        self.customer_table_2.setItem(
+            0, 3, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['zip']]))
+        self.customer_table_2.setItem(
+            0, 4, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['last_activity']]))
+
+    def fill_potential_phone_numbers(self, customer_data):
+        # Generate string to pass
+        result = []
+        result.append("Home: {}".format(customer_data[SETTINGS['tuple_dicts']['customer']['home_phone']]))
+        result.append("Work: {}".format(customer_data[SETTINGS['tuple_dicts']['customer']['work_phone']]))
+        result.append("Cell: {}".format(customer_data[SETTINGS['tuple_dicts']['customer']['cell_phone']]))
+        numbers_str = "\n".join(result)
+        # Fill numbers
+        self.phone_tbox.setText(numbers_str)
+
+
+
+
+
 
     def setupUi(self, MainWindow):
 
@@ -554,12 +599,10 @@ class Ui_MainWindow(object):
         self.label_10.setObjectName("label_10")
         self.verticalLayout_6.addWidget(self.label_10)
 
-        # Phone Numbers Table
-        self.phone_tbox = QtWidgets.QTableWidget(self.customer_page)
+        # Phone Numbers Text box
+        self.phone_tbox = QtWidgets.QTextBrowser(self.customer_page)
         self.phone_tbox.setMinimumSize(QtCore.QSize(0, 71))
         self.phone_tbox.setObjectName("phone_tbox")
-        self.phone_tbox.setColumnCount(0)
-        self.phone_tbox.setRowCount(0)
 
         self.verticalLayout_6.addWidget(self.phone_tbox)
         self.gridLayout_10.addLayout(self.verticalLayout_6, 1, 0, 1, 2)

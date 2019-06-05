@@ -45,6 +45,14 @@ class DBCon:
         ''', (name,))
         return self.fetch_cursor()
 
+    def search_by_customer_id(self, id):
+        self.cursor.execute('''
+        SELECT *
+        FROM customer
+        WHERE customer_id=?
+        ''', (id,))
+        return self.fetch_cursor()
+
     def run_general_query(self, query, query_type, term):
 
         print("Executing: {}".format(query))
