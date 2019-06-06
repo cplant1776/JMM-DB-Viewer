@@ -31,3 +31,30 @@ tuple_dicts:
     email: 12
     notes: 14
     company: 15
+  sro:
+    service_id: 0
+    customer_id: 1
+    make: 2
+    model: 3
+    serial_num: 4
+    date_complete: 5
+    date_in: 6
+    labor_estimate: 7
+    parts_estimate: 8
+    technician: 9
+    picked_up: 10
+    service_request: 11
+    work_performed: 12
+  sale:
+    sale_id: 0
+    customer_id: 1
+    subtotal: 2
+    tax: 3
+    total: 4
+    sale_date: 5
+    cash: 6
+    check_amt: 7
+    credit: 8
+    debit: 9
+    misc: 10
+    is_overring: 11

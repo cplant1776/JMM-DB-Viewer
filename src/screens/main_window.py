@@ -92,7 +92,9 @@ class Ui_MainWindow(object):
         # Fill in notes
         self.notes_tbox.setText(customer_data[SETTINGS['tuple_dicts']['customer']['notes']])
         # Fill in SRO
+        self.fill_in_sro(id)
         # Fill in transactions
+        self.fill_in_sales(id)
         print("Populated cusotmer page")
 
     def fill_customer_page_basic_info_tables(self, customer_data):
@@ -107,6 +109,7 @@ class Ui_MainWindow(object):
             0, 3, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['company']]))
         self.customer_table_1.setItem(
             0, 4, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['email']]))
+
         # Table 2 - Addr/City/ST/Zip/Last Activity
         self.customer_table_2.setItem(
             0, 0, QtWidgets.QTableWidgetItem(customer_data[SETTINGS['tuple_dicts']['customer']['address']]))
@@ -129,9 +132,33 @@ class Ui_MainWindow(object):
         # Fill numbers
         self.phone_tbox.setText(numbers_str)
 
+    def fill_in_sro(self, cust_id):
+        orders = self.db_con.sro_search_by_cust_id(cust_id)
+        self.sro_table.setRowCount(len(orders))
+        for row, r in enumerate(orders):
+            self.sro_table.setItem(row, 0,
+                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['date_in']])))
+            self.sro_table.setItem(row, 1,
+                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['date_complete']])))
+            self.sro_table.setItem(row, 2,
+                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['picked_up']])))
+            self.sro_table.setItem(row, 3,
+                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['make']])))
+            self.sro_table.setItem(row, 4,
+                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['model']])))
 
-
-
+    def fill_in_sales(self, cust_id):
+        sales = self.db_con.sale_search_by_cust_id(cust_id)
+        self.transactions_table.setRowCount(len(sales))
+        for row, s in enumerate(sales):
+            self.transactions_table.setItem(row, 0,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['sale_date']]))
+            self.transactions_table.setItem(row, 1,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['subtotal']]))
+            self.transactions_table.setItem(row, 2,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['tax']]))
+            self.transactions_table.setItem(row, 3,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['total']]))
 
 
     def setupUi(self, MainWindow):
@@ -537,6 +564,7 @@ class Ui_MainWindow(object):
         self.customer_table_1.setVerticalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.customer_table_1.setHorizontalHeaderItem(0, item)
+        self.customer_table_1.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.gridLayout_10.addWidget(self.customer_table_1, 0, 1, 1, 1)
 
 
@@ -581,6 +609,7 @@ class Ui_MainWindow(object):
         self.customer_table_2.setVerticalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.customer_table_2.setHorizontalHeaderItem(0, item)
+        self.customer_table_2.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.horizontalLayout_7.addWidget(self.customer_table_2)
 
         # Layaway Button
@@ -654,6 +683,7 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         item.setFont(font)
         self.transactions_table.setHorizontalHeaderItem(3, item)
+        self.transactions_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
         self.verticalLayout_7.addWidget(self.transactions_table)
         self.gridLayout_10.addLayout(self.verticalLayout_7, 2, 0, 1, 3)
@@ -667,7 +697,7 @@ class Ui_MainWindow(object):
         self.sro_table = QtWidgets.QTableWidget(self.customer_page)
         self.sro_table.setMaximumSize(QtCore.QSize(401, 16777215))
         self.sro_table.setObjectName("sro_table")
-        self.sro_table.setColumnCount(3)
+        self.sro_table.setColumnCount(5)
         self.sro_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         font = QtGui.QFont()
@@ -687,6 +717,19 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         item.setFont(font)
         self.sro_table.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        item.setFont(font)
+        self.sro_table.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        item.setFont(font)
+        self.sro_table.setHorizontalHeaderItem(4, item)
+        self.sro_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.verticalLayout_4.addWidget(self.sro_table)
         self.gridLayout_10.addLayout(self.verticalLayout_4, 2, 3, 1, 1)
 
@@ -806,4 +849,8 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Date Done"))
         item = self.sro_table.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Picked Up"))
+        item = self.sro_table.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Make"))
+        item = self.sro_table.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Model"))
 
