@@ -3,7 +3,7 @@ import sys
 # Third Party Imports
 from PyQt5 import QtWidgets
 # Local Imports
-from src.screens.main_window import Ui_MainWindow
+from src.screens.master_window import MasterWindow
 from src.config import SETTINGS
 
 
@@ -16,7 +16,7 @@ class App:
     @staticmethod
     def setup_main_window():
         main_window = QtWidgets.QMainWindow()
-        ui = Ui_MainWindow()
+        ui = MasterWindow()
         ui.setupUi(main_window)
         ui.bind_buttons()
         return main_window
