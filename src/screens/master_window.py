@@ -19,7 +19,7 @@ class MasterWindow(Ui_MainWindow):
 
     def bind_buttons(self):
         self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
-        self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
+        self.serialized_btn.clicked.connect(partial(self.go_to_serialized_inventory))
         self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
         self.submit_search_btn.clicked.connect(partial(self.run_search))
         self.back_btn_serial.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
@@ -156,6 +156,28 @@ class MasterWindow(Ui_MainWindow):
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['tax']]))
             self.transactions_table.setItem(row, 3,
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['total']]))
+
+    # ===========================================================================================================
+    # SERIALIZED INVENTORY POPULATION FUNCTIONS
+    # ===========================================================================================================
+    def go_to_serialized_inventory(self):
+        self.fill_in_serialized_inventory()
+        self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
+
+    def fill_in_serialized_inventory(self):
+        inventory = self.db_con.get_serialized_inventory()
+        self.serial_table.setRowCount(len(inventory))
+        for row, s in enumerate(inventory):
+            self.serial_table.setItem(row, 0,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['make']]))
+            self.serial_table.setItem(row, 1,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['model']]))
+            self.serial_table.setItem(row, 2,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['serial_num']]))
+            self.serial_table.setItem(row, 3,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['date_received']]))
+            self.serial_table.setItem(row, 4,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['notes']]))
 
 
 # ==============================================================

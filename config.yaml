@@ -58,3 +58,11 @@ tuple_dicts:
     debit: 9
     misc: 10
     is_overring: 11
+  serial:
+    serial_id: 0
+    make: 1
+    model: 2
+    serial_num: 3
+    cost: 4
+    date_received: 5
+    notes: 6

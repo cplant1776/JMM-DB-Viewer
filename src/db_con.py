@@ -15,12 +15,18 @@ class DBCon:
         self.cursor = self.conn.cursor()
         self.general_search_results = []
 
+    # ===========================================================================================================
+    # GENERAL FUNCTIONS
+    # ===========================================================================================================
     def execute_custom_query(self, query=""):
         self.cursor.execute(query)
 
     def fetch_cursor(self):
         return self.cursor.fetchall()
 
+    # ===========================================================================================================
+    # SEARCH BY X
+    # ===========================================================================================================
     def search_by_number(self, number):
         self.cursor.execute('''
         SELECT *
@@ -53,6 +59,9 @@ class DBCon:
         ''', (id,))
         return self.fetch_cursor()
 
+    # ===========================================================================================================
+    # SEARCH FOR X BY CUSTOMER ID
+    # ===========================================================================================================
     def sro_search_by_cust_id(self, id):
         self.cursor.execute('''
         SELECT *
@@ -69,6 +78,9 @@ class DBCon:
         ''', (id,))
         return self.fetch_cursor()
 
+    # ===========================================================================================================
+    # GENERAL SEARCH FUNCTIONS
+    # ===========================================================================================================
     def run_general_query(self, query, query_type, term):
         print("Executing: {}".format(query))
         self.cursor.execute(query, term)
@@ -86,6 +98,15 @@ class DBCon:
                     self.run_general_query(query, query_type, term)
         return self.general_search_results
 
+    # ===========================================================================================================
+    # SERIALIZED INVENTORY SEARCH
+    # ===========================================================================================================
+    def get_serialized_inventory(self):
+        self.cursor.execute('''
+        SELECT *
+        FROM serialized_inv
+        ''')
+        return self.fetch_cursor()
 
 class GeneralResult:
     def __init__(self, result, query_type):
