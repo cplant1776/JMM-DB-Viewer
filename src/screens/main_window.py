@@ -387,10 +387,11 @@ class Ui_MainWindow(object):
 
         # Customer Table 1 - ID/First/Last/Company/Email
         self.customer_table_1 = QtWidgets.QTableWidget(self.customer_page)
-        self.customer_table_1.setMaximumSize(QtCore.QSize(251, 231))
+        # self.customer_table_1.setMaximumSize(QtCore.QSize(251, 231))
         self.customer_table_1.setObjectName("customer_table_1")
         self.customer_table_1.setColumnCount(1)
         self.customer_table_1.setRowCount(5)
+
         item = QtWidgets.QTableWidgetItem()
         font = QtGui.QFont()
         font.setBold(True)

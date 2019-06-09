@@ -18,13 +18,31 @@ class MasterWindow(Ui_MainWindow):
         self.db_con = DBCon(db_loc=SETTINGS['local_database_path'])
 
     def bind_buttons(self):
-        self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
+        self.search_btn.clicked.connect(partial(self.go_to_sro, id=5846))
+        # self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.serialized_btn.clicked.connect(partial(self.go_to_serialized_inventory))
         self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
         self.submit_search_btn.clicked.connect(partial(self.run_search))
         self.back_btn_serial.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
         # self.layaway_btn.clicked.connect(self.run_search)
 
+    # ===========================================================================================================
+    # GO TO PAGE X
+    # ===========================================================================================================
+    def go_to_sro(self, id):
+        # populate SRO page
+        self.fill_in_sro(id=id)
+        # Go to SRO page
+        self.stackedWidget.go_to_screen(screen='sro')
+
+
+    def go_to_serialized_inventory(self):
+        self.fill_in_serialized_inventory()
+        self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
+
+    # ===========================================================================================================
+    # GENERAL FUNCTIONS
+    # ===========================================================================================================
     def run_search(self):
         # Run appropriate query and store result
         is_general_search = False
@@ -89,7 +107,7 @@ class MasterWindow(Ui_MainWindow):
         # Fill in notes
         self.notes_tbox.setText(customer_data[SETTINGS['tuple_dicts']['customer']['notes']])
         # Fill in SRO
-        self.fill_in_sro(id)
+        self.fill_in_cust_sro(id)
         # Fill in transactions
         self.fill_in_sales(id)
         print("Populated cusotmer page")
@@ -129,7 +147,7 @@ class MasterWindow(Ui_MainWindow):
         # Fill numbers
         self.phone_tbox.setText(numbers_str)
 
-    def fill_in_sro(self, cust_id):
+    def fill_in_cust_sro(self, cust_id):
         orders = self.db_con.sro_search_by_cust_id(cust_id)
         self.sro_table.setRowCount(len(orders))
         for row, r in enumerate(orders):
@@ -160,10 +178,6 @@ class MasterWindow(Ui_MainWindow):
     # ===========================================================================================================
     # SERIALIZED INVENTORY POPULATION FUNCTIONS
     # ===========================================================================================================
-    def go_to_serialized_inventory(self):
-        self.fill_in_serialized_inventory()
-        self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
-
     def fill_in_serialized_inventory(self):
         inventory = self.db_con.get_serialized_inventory()
         self.serial_table.setRowCount(len(inventory))
@@ -179,7 +193,33 @@ class MasterWindow(Ui_MainWindow):
             self.serial_table.setItem(row, 4,
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['notes']]))
 
+    # ===========================================================================================================
+    # SRO PAGE POPULATION FUNCTIONS
+    # ===========================================================================================================
+    def fill_in_sro(self, id):
+        sro_data = self.db_con.get_sro_from_id(service_id=id)[0]
+        # Fill in basic info
+        self.fill_sro_basic_info(data=sro_data)
+        # Fill in service request
+        self.service_text.setText(sro_data[SETTINGS['tuple_dicts']['sro']['service_request']])
+        # Fill in work performed
+        self.work_text.setText(sro_data[SETTINGS['tuple_dicts']['sro']['work_performed']])
 
+    def fill_sro_basic_info(self, data):
+        self.data_table_3.setItem(0, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['service_id']]))
+        self.data_table_3.setItem(1, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['customer_id']]))
+        self.data_table_3.setItem(2, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['make']]))
+        self.data_table_3.setItem(3, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['model']]))
+        self.data_table_3.setItem(4, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['date_in']]))
+        self.data_table_3.setItem(5, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['date_complete']]))
+        self.data_table_3.setItem(6, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['picked_up']]))
 # ==============================================================
 # Main
 # ==============================================================

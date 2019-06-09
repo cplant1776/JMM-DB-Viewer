@@ -25,7 +25,7 @@ class DBCon:
         return self.cursor.fetchall()
 
     # ===========================================================================================================
-    # SEARCH BY X
+    # SEARCH CUSTOMER BY X
     # ===========================================================================================================
     def search_by_number(self, number):
         self.cursor.execute('''
@@ -79,6 +79,27 @@ class DBCon:
         return self.fetch_cursor()
 
     # ===========================================================================================================
+    # SERIALIZED INVENTORY SEARCH
+    # ===========================================================================================================
+    def get_serialized_inventory(self):
+        self.cursor.execute('''
+        SELECT *
+        FROM serialized_inv
+        ''')
+        return self.fetch_cursor()
+
+    # ===========================================================================================================
+    # SEARCH SRO BY SERVICE ID
+    # ===========================================================================================================
+    def get_sro_from_id(self, service_id):
+        self.cursor.execute('''
+        SELECT *
+        FROM service
+        WHERE service_id=?
+        ''', (service_id,))
+        return self.fetch_cursor()
+
+    # ===========================================================================================================
     # GENERAL SEARCH FUNCTIONS
     # ===========================================================================================================
     def run_general_query(self, query, query_type, term):
@@ -98,15 +119,6 @@ class DBCon:
                     self.run_general_query(query, query_type, term)
         return self.general_search_results
 
-    # ===========================================================================================================
-    # SERIALIZED INVENTORY SEARCH
-    # ===========================================================================================================
-    def get_serialized_inventory(self):
-        self.cursor.execute('''
-        SELECT *
-        FROM serialized_inv
-        ''')
-        return self.fetch_cursor()
 
 class GeneralResult:
     def __init__(self, result, query_type):
