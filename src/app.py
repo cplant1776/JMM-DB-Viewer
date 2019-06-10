@@ -19,6 +19,7 @@ class App:
         ui = MasterWindow()
         ui.setupUi(main_window)
         ui.bind_buttons()
+        ui.bind_table_behavior()
         return main_window
 
 

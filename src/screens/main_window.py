@@ -102,8 +102,7 @@ class Ui_MainWindow(object):
         self.search_result_table.setRowCount(0)
         # Disable cell editing
         self.search_result_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        # Connect double click signal to function
-        self.search_result_table.itemDoubleClicked.connect(self.go_to_item_page)
+
 
         item = QtWidgets.QTableWidgetItem()
         self.search_result_table.setHorizontalHeaderItem(0, item)
@@ -358,6 +357,7 @@ class Ui_MainWindow(object):
         self.work_text = QtWidgets.QTextBrowser(self.sro_page)
         self.work_text.setObjectName("work_text")
         self.verticalLayout_3.addWidget(self.work_text)
+
         self.horizontalLayout_3.addLayout(self.verticalLayout_3)
         self.gridLayout_9.addLayout(self.horizontalLayout_3, 0, 0, 1, 1)
         self.layoutWidget_3 = QtWidgets.QWidget(self.sro_page)
@@ -368,9 +368,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         spacerItem13 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem13)
-        self.back_btn_3 = QtWidgets.QPushButton(self.layoutWidget_3)
-        self.back_btn_3.setObjectName("back_btn_3")
-        self.horizontalLayout_4.addWidget(self.back_btn_3)
+
+        # Back button
+        self.sro_back_btn = QtWidgets.QPushButton(self.layoutWidget_3)
+        self.sro_back_btn.setObjectName("sro_back_btn")
+        self.horizontalLayout_4.addWidget(self.sro_back_btn)
         spacerItem14 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem14)
         self.stackedWidget.addWidget(self.sro_page)
@@ -477,7 +479,6 @@ class Ui_MainWindow(object):
         self.layaway_btn.setMaximumSize(QtCore.QSize(151, 121))
         self.layaway_btn.setObjectName("layaway_btn")
         self.horizontalLayout_7.addWidget(self.layaway_btn)
-        # self.layaway_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search_result'))
 
         spacerItem16 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_7.addItem(spacerItem16)
@@ -517,7 +518,7 @@ class Ui_MainWindow(object):
         self.transactions_table = QtWidgets.QTableWidget(self.customer_page)
         self.transactions_table.setMinimumSize(QtCore.QSize(521, 0))
         self.transactions_table.setObjectName("transactions_table")
-        self.transactions_table.setColumnCount(4)
+        self.transactions_table.setColumnCount(5)
         self.transactions_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         font = QtGui.QFont()
@@ -543,6 +544,13 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         item.setFont(font)
         self.transactions_table.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        item.setFont(font)
+        self.transactions_table.setHorizontalHeaderItem(4, item)
+
         self.transactions_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
         self.verticalLayout_7.addWidget(self.transactions_table)
@@ -557,7 +565,7 @@ class Ui_MainWindow(object):
         self.sro_table = QtWidgets.QTableWidget(self.customer_page)
         self.sro_table.setMaximumSize(QtCore.QSize(401, 16777215))
         self.sro_table.setObjectName("sro_table")
-        self.sro_table.setColumnCount(5)
+        self.sro_table.setColumnCount(6)
         self.sro_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         font = QtGui.QFont()
@@ -589,6 +597,12 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         item.setFont(font)
         self.sro_table.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        item.setFont(font)
+        self.sro_table.setHorizontalHeaderItem(5, item)
         self.sro_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.verticalLayout_4.addWidget(self.sro_table)
         self.gridLayout_10.addLayout(self.verticalLayout_4, 2, 3, 1, 1)
@@ -665,7 +679,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Value"))
         self.label_8.setText(_translate("MainWindow", "Service Request"))
         self.label_9.setText(_translate("MainWindow", "Work Performed"))
-        self.back_btn_3.setText(_translate("MainWindow", "Back"))
+        self.sro_back_btn.setText(_translate("MainWindow", "Back"))
         item = self.customer_table_1.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "Customer ID"))
         item = self.customer_table_1.verticalHeaderItem(1)
@@ -702,6 +716,8 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Tax"))
         item = self.transactions_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Total"))
+        item = self.transactions_table.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Sale ID"))
         self.label_11.setText(_translate("MainWindow", "SRO"))
         item = self.sro_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date In"))
@@ -713,4 +729,6 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Make"))
         item = self.sro_table.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Model"))
+        item = self.sro_table.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "SRO ID"))
 

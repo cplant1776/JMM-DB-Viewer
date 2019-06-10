@@ -28,3 +28,4 @@ class MyStackWidget(QtWidgets.QStackedWidget):
         tmp = self.currentIndex()
         self.setCurrentIndex(self.previous_screen_index)
         self.previous_screen_index = tmp
+        print("Go to: previous screen")

@@ -17,14 +17,24 @@ class MasterWindow(Ui_MainWindow):
         super().__init__()
         self.db_con = DBCon(db_loc=SETTINGS['local_database_path'])
 
+    # ===========================================================================================================
+    # BINDINGS
+    # ===========================================================================================================
+
     def bind_buttons(self):
-        self.search_btn.clicked.connect(partial(self.go_to_sro, id=5846))
-        # self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
+        # self.search_btn.clicked.connect(partial(self.go_to_sro, id=5846))
+        self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.serialized_btn.clicked.connect(partial(self.go_to_serialized_inventory))
         self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
         self.submit_search_btn.clicked.connect(partial(self.run_search))
         self.back_btn_serial.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
+        self.sro_back_btn.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
         # self.layaway_btn.clicked.connect(self.run_search)
+
+    def bind_table_behavior(self):
+        # Connect double click signal to function
+        self.search_result_table.itemDoubleClicked.connect(self.go_to_item_page)
+        self.sro_table.itemDoubleClicked.connect(self.go_to_sro_page)
 
     # ===========================================================================================================
     # GO TO PAGE X
@@ -35,10 +45,45 @@ class MasterWindow(Ui_MainWindow):
         # Go to SRO page
         self.stackedWidget.go_to_screen(screen='sro')
 
+    def go_to_sale(self, id):
+        # populate sale page
+        # Go to sale page
+        # self.stackedWidget.go_to_screen(screen='sale')
+        pass
+
+    def go_to_customer_page(self):
+        # Find selected row
+        selected_row = self.search_result_table.selectedItems()[0].row()
+        print("selected row: {}".format(selected_row))
+        # Find customer id on selected row (1st col)
+        cust_id = self.search_result_table.item(selected_row, 0).text()
+        print("Selected row: {} ==> cust id: {}".format(selected_row, cust_id))
+        # Fill in destination page information
+        self.populate_customer_page(id=cust_id)
+        # Go to destination page
+        self.stackedWidget.go_to_screen('customer')
 
     def go_to_serialized_inventory(self):
         self.fill_in_serialized_inventory()
         self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
+
+    def go_to_sro_page(self):
+        # Find selected row
+        selected_row = self.sro_table.selectedItems()[0].row()
+        # Find sro id on selected row (1st col)
+        sro_id = self.sro_table.item(selected_row, 5).text()
+        print("Selected row: {} ==> SRO id: {}".format(selected_row, sro_id))
+        # Fill in destination page information and go to it
+        self.go_to_sro(id=sro_id)
+
+    def go_to_transaction_page(self):
+        # Find selected row
+        selected_row = self.transactions_table.selectedItems()[0].row()
+        # Find sale id on selected row (1st col)
+        sale_id = self.transactions_table.item(selected_row, 4).text()
+        print("Selected row: {} ==> sale id: {}".format(selected_row, sale_id))
+        # Fill in destination page information and go to it
+        self.go_to_sale(id=sale_id)
 
     # ===========================================================================================================
     # GENERAL FUNCTIONS
@@ -83,17 +128,6 @@ class MasterWindow(Ui_MainWindow):
         # Go to page
         self.go_to_customer_page()
         pass
-
-    def go_to_customer_page(self):
-        # Find selected row
-        selected_row = self.search_result_table.selectedItems()[0].row()
-        # Find customer id on selected row (1st col)
-        cust_id = self.search_result_table.item(selected_row, 0).text()
-        print("Selected row: {} ==> cust id: {}".format(selected_row, cust_id))
-        # Fill in destination page information
-        self.populate_customer_page(id=cust_id)
-        # Go to destination page
-        self.stackedWidget.go_to_screen('customer')
 
     # ===========================================================================================================
     # CUSTOMER PAGE POPULATION FUNCTIONS
@@ -161,6 +195,8 @@ class MasterWindow(Ui_MainWindow):
                                    QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['make']])))
             self.sro_table.setItem(row, 4,
                                    QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['model']])))
+            self.sro_table.setItem(row, 5,
+                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['service_id']])))
 
     def fill_in_sales(self, cust_id):
         sales = self.db_con.sale_search_by_cust_id(cust_id)
@@ -174,6 +210,8 @@ class MasterWindow(Ui_MainWindow):
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['tax']]))
             self.transactions_table.setItem(row, 3,
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['total']]))
+            self.transactions_table.setItem(row, 4,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['sale_id']]))
 
     # ===========================================================================================================
     # SERIALIZED INVENTORY POPULATION FUNCTIONS
