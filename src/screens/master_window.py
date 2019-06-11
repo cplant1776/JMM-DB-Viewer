@@ -35,6 +35,7 @@ class MasterWindow(Ui_MainWindow):
         # Connect double click signal to function
         self.search_result_table.itemDoubleClicked.connect(self.go_to_item_page)
         self.sro_table.itemDoubleClicked.connect(self.go_to_sro_page)
+        self.transactions_table.itemDoubleClicked.connect(self.go_to_sale_page)
 
     # ===========================================================================================================
     # GO TO PAGE X
@@ -47,9 +48,9 @@ class MasterWindow(Ui_MainWindow):
 
     def go_to_sale(self, id):
         # populate sale page
+        self.fill_in_sale(id)
         # Go to sale page
-        # self.stackedWidget.go_to_screen(screen='sale')
-        pass
+        self.stackedWidget.go_to_screen(screen='sale')
 
     def go_to_customer_page(self):
         # Find selected row
@@ -76,7 +77,7 @@ class MasterWindow(Ui_MainWindow):
         # Fill in destination page information and go to it
         self.go_to_sro(id=sro_id)
 
-    def go_to_transaction_page(self):
+    def go_to_sale_page(self):
         # Find selected row
         selected_row = self.transactions_table.selectedItems()[0].row()
         # Find sale id on selected row (1st col)
@@ -143,7 +144,7 @@ class MasterWindow(Ui_MainWindow):
         # Fill in SRO
         self.fill_in_cust_sro(id)
         # Fill in transactions
-        self.fill_in_sales(id)
+        self.fill_in_cust_sales(id)
         print("Populated cusotmer page")
 
     def fill_customer_page_basic_info_tables(self, customer_data):
@@ -198,7 +199,7 @@ class MasterWindow(Ui_MainWindow):
             self.sro_table.setItem(row, 5,
                                    QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['service_id']])))
 
-    def fill_in_sales(self, cust_id):
+    def fill_in_cust_sales(self, cust_id):
         sales = self.db_con.sale_search_by_cust_id(cust_id)
         self.transactions_table.setRowCount(len(sales))
         for row, s in enumerate(sales):
@@ -258,6 +259,52 @@ class MasterWindow(Ui_MainWindow):
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['date_complete']]))
         self.data_table_3.setItem(6, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['picked_up']]))
+
+    # ===========================================================================================================
+    # SALE PAGE POPULATION FUNCTIONS
+    # ===========================================================================================================
+    def fill_in_sale(self, id):
+        sale_data = self.db_con.get_sale_from_id(sale_id=id)[0]
+        # Fill in basic info
+        self.fill_sale_basic_info(data=sale_data)
+        # Fill in line-by-line information
+        self.service_text.setText(sale_data[SETTINGS['tuple_dicts']['sro']['service_request']])
+
+    def fill_sale_basic_info(self, data):
+        # Sale Table 1 - sale id/cust id/cust name
+        self.sale_table_1.setItem(0, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['sale_id']]))
+        self.sale_table_1.setItem(1, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['customer_id']]))
+
+        customer_info = self.db_con.search_by_customer_id(id=data[SETTINGS['tuple_dicts']['sale']['customer_id']])[0]
+        first_name = customer_info[SETTINGS['tuple_dicts']['customer']['first_name']]
+        last_name = customer_info[SETTINGS['tuple_dicts']['customer']['last_name']]
+        customer_name = first_name + ' ' + last_name
+        self.sale_table_1.setItem(2, 0,
+                                  QtWidgets.QTableWidgetItem(customer_name))
+
+        # Sale Table 2 - date/overcharged?
+        self.sale_table_2.setItem(0, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['sale_date']]))
+        self.sale_table_2.setItem(1, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['is_overring']]))
+
+        # Sale Table 4 - subtotal/tax/total/cash/credit/debit/misc
+        self.sale_table_4.setItem(0, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['subtotal']]))
+        self.sale_table_4.setItem(1, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['tax']]))
+        self.sale_table_4.setItem(2, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['total']]))
+        self.sale_table_4.setItem(3, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['cash']]))
+        self.sale_table_4.setItem(4, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['credit']]))
+        self.sale_table_4.setItem(5, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['debit']]))
+        self.sale_table_4.setItem(6, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['misc']]))
 # ==============================================================
 # Main
 # ==============================================================
