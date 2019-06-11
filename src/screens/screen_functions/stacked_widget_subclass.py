@@ -10,7 +10,8 @@ class MyStackWidget(QtWidgets.QStackedWidget):
                             "search": 2,
                             "serial": 3,
                             "sro": 4,
-                            "customer": 5}
+                            "customer": 5,
+                            "sale": 6}
         self.previous_screen_index = 0
 
     def forward(self):

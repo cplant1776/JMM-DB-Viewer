@@ -22,7 +22,7 @@ class MasterWindow(Ui_MainWindow):
     # ===========================================================================================================
 
     def bind_buttons(self):
-        # self.search_btn.clicked.connect(partial(self.go_to_sro, id=5846))
+        # self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='sale'))
         self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.serialized_btn.clicked.connect(partial(self.go_to_serialized_inventory))
         self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))

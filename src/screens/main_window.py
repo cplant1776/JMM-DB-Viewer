@@ -30,6 +30,8 @@ class Ui_MainWindow(object):
         MainWindow.resize(1076, 869)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.stackedWidget = MyStackWidget()
@@ -53,7 +55,6 @@ class Ui_MainWindow(object):
         self.search_btn = QtWidgets.QPushButton(self.start_page)
         self.search_btn.setObjectName("search_btn")
         self.gridLayout.addWidget(self.search_btn, 1, 1, 1, 1)
-        # self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
 
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem1, 2, 0, 1, 1)
@@ -66,7 +67,6 @@ class Ui_MainWindow(object):
         self.serialized_btn = QtWidgets.QPushButton(self.start_page)
         self.serialized_btn.setObjectName("serialized_btn")
         self.gridLayout.addWidget(self.serialized_btn, 3, 1, 1, 1)
-        # self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
 
 
         spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -618,6 +618,93 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        # =================================================================================
+        #  Sale/Transaction Page
+        # =================================================================================
+
+        self.sale_page = QtWidgets.QWidget()
+        self.sale_page.setObjectName("sale_page")
+
+        # Create grid layout
+        self.sale_grid_layout = QtWidgets.QGridLayout(self.sale_page)
+        self.sale_grid_layout.setObjectName("sale_grid_layout")
+
+        # Sale Table 1 - sale id/cust id/cust name
+        self.sale_table_1 = QtWidgets.QTableWidget(self.sale_page)
+        self.sale_table_1.setMaximumSize(QtCore.QSize(261, 151))
+        self.sale_table_1.setObjectName("sale_table_1")
+        self.sale_table_1.setColumnCount(1)
+        self.sale_table_1.setRowCount(3)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_1.setVerticalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_1.setVerticalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_1.setVerticalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_1.setHorizontalHeaderItem(0, item)
+        self.sale_grid_layout.addWidget(self.sale_table_1, 0, 0, 1, 1)
+
+        # Spacer
+        spacerItem = QtWidgets.QSpacerItem(442, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.sale_grid_layout.addItem(spacerItem, 0, 1, 1, 1)
+
+        # Sale Table 2 - date/overcharged?
+        self.sale_table_2 = QtWidgets.QTableWidget(self.sale_page)
+        self.sale_table_2.setMaximumSize(QtCore.QSize(231, 111))
+        self.sale_table_2.setObjectName("sale_table_2")
+        self.sale_table_2.setColumnCount(1)
+        self.sale_table_2.setRowCount(2)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_2.setVerticalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_2.setVerticalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_2.setHorizontalHeaderItem(0, item)
+        self.sale_grid_layout.addWidget(self.sale_table_2, 0, 2, 1, 1)
+
+        # Spacer
+        spacerItem1 = QtWidgets.QSpacerItem(20, 278, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.sale_grid_layout.addItem(spacerItem1, 1, 0, 1, 1)
+
+        # Sale Table 3 - desc/unit cost/qty
+        self.sale_table_3 = QtWidgets.QTableWidget(self.sale_page)
+        self.sale_table_3.setObjectName("sale_table_3")
+        self.sale_table_3.setColumnCount(3)
+        self.sale_table_3.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_3.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_3.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_3.setHorizontalHeaderItem(2, item)
+        self.sale_grid_layout.addWidget(self.sale_table_3, 1, 1, 2, 2)
+
+        # Sale Table 4 - subtotal/tax/total/cash/credit/debit/misc
+        self.sale_table_4 = QtWidgets.QTableWidget(self.sale_page)
+        self.sale_table_4.setMaximumSize(QtCore.QSize(230, 311))
+        self.sale_table_4.setObjectName("sale_table_4")
+        self.sale_table_4.setColumnCount(1)
+        self.sale_table_4.setRowCount(7)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_4.setVerticalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_4.setVerticalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_4.setVerticalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_4.setVerticalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_4.setVerticalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_4.setVerticalHeaderItem(5, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_4.setVerticalHeaderItem(6, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_4.setHorizontalHeaderItem(0, item)
+        self.sale_grid_layout.addWidget(self.sale_table_4, 2, 0, 1, 1)
+
+        self.stackedWidget.addWidget(self.sale_page)
 
         # Retranslate UI & connect signals
         self.retranslateUi(MainWindow)
@@ -731,4 +818,41 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Model"))
         item = self.sro_table.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "SRO ID"))
+
+        item = self.sale_table_1.verticalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Sale ID"))
+        item = self.sale_table_1.verticalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Customer ID"))
+        item = self.sale_table_1.verticalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Customer Name"))
+        item = self.sale_table_1.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Value"))
+        item = self.sale_table_2.verticalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Date"))
+        item = self.sale_table_2.verticalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Is Overring?"))
+        item = self.sale_table_2.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Value"))
+        item = self.sale_table_3.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Description"))
+        item = self.sale_table_3.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Unit Cost"))
+        item = self.sale_table_3.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Qty"))
+        item = self.sale_table_4.verticalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Subtotal"))
+        item = self.sale_table_4.verticalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Tax"))
+        item = self.sale_table_4.verticalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Total"))
+        item = self.sale_table_4.verticalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Cash"))
+        item = self.sale_table_4.verticalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Credit"))
+        item = self.sale_table_4.verticalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Debit"))
+        item = self.sale_table_4.verticalHeaderItem(6)
+        item.setText(_translate("MainWindow", "Misc"))
+        item = self.sale_table_4.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Values"))
 
