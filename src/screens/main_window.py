@@ -667,10 +667,10 @@ class Ui_MainWindow(object):
         spacerItem1 = QtWidgets.QSpacerItem(20, 278, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.sale_grid_layout.addItem(spacerItem1, 1, 0, 1, 1)
 
-        # Sale Table 3 - desc/unit cost/qty
+        # Sale Table 3 - desc/qty/unit cost/item discount/item total
         self.sale_table_3 = QtWidgets.QTableWidget(self.sale_page)
         self.sale_table_3.setObjectName("sale_table_3")
-        self.sale_table_3.setColumnCount(3)
+        self.sale_table_3.setColumnCount(5)
         self.sale_table_3.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.sale_table_3.setHorizontalHeaderItem(0, item)
@@ -678,6 +678,10 @@ class Ui_MainWindow(object):
         self.sale_table_3.setHorizontalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()
         self.sale_table_3.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_3.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.sale_table_3.setHorizontalHeaderItem(4, item)
         self.sale_grid_layout.addWidget(self.sale_table_3, 1, 1, 2, 2)
 
         # Sale Table 4 - subtotal/tax/total/cash/credit/debit/misc
@@ -833,12 +837,18 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Is Overring?"))
         item = self.sale_table_2.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Value"))
+
         item = self.sale_table_3.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Description"))
         item = self.sale_table_3.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Unit Cost"))
+        item.setText(_translate("MainWindow", "Quantity"))
         item = self.sale_table_3.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Qty"))
+        item.setText(_translate("MainWindow", "Unit Cost"))
+        item = self.sale_table_3.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Item Discount"))
+        item = self.sale_table_3.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Item Total"))
+
         item = self.sale_table_4.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "Subtotal"))
         item = self.sale_table_4.verticalHeaderItem(1)

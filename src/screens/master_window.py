@@ -268,7 +268,7 @@ class MasterWindow(Ui_MainWindow):
         # Fill in basic info
         self.fill_sale_basic_info(data=sale_data)
         # Fill in line-by-line information
-        self.service_text.setText(sale_data[SETTINGS['tuple_dicts']['sro']['service_request']])
+        self.fill_in_sale_items(id)
 
     def fill_sale_basic_info(self, data):
         # Sale Table 1 - sale id/cust id/cust name
@@ -305,6 +305,23 @@ class MasterWindow(Ui_MainWindow):
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['debit']]))
         self.sale_table_4.setItem(6, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['misc']]))
+
+    def fill_in_sale_items(self, id):
+        sale_items_data = self.db_con.get_sale_items_from_id(sale_id=id)
+        self.sale_table_3.setRowCount(len(sale_items_data))
+        for row, s in enumerate(sale_items_data):
+            self.sale_table_3.setItem(row, 0,
+                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['description']])))
+            self.sale_table_3.setItem(row, 1,
+                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['quantity']])))
+            self.sale_table_3.setItem(row, 2,
+                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']])))
+            self.sale_table_3.setItem(row, 3,
+                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']])))
+            self.sale_table_3.setItem(row, 4,
+                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_total']])))
+
+
 # ==============================================================
 # Main
 # ==============================================================

@@ -66,3 +66,10 @@ tuple_dicts:
     cost: 4
     date_received: 5
     notes: 6
+  sale_items:
+    sale_id: 0
+    description: 1
+    quantity: 2
+    unit_price: 3
+    item_discount_perc: 4
+    item_total: 5

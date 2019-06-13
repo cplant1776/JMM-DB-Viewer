@@ -60,7 +60,7 @@ class DBCon:
         return self.fetch_cursor()
 
     # ===========================================================================================================
-    # SEARCH FOR X BY CUSTOMER ID
+    # SEARCH X BY CUSTOMER ID
     # ===========================================================================================================
     def sro_search_by_cust_id(self, id):
         self.cursor.execute('''
@@ -89,7 +89,7 @@ class DBCon:
         return self.fetch_cursor()
 
     # ===========================================================================================================
-    # SEARCH SRO BY SERVICE ID
+    # SEARCH X BY SERVICE ID
     # ===========================================================================================================
     def get_sro_from_id(self, service_id):
         self.cursor.execute('''
@@ -100,12 +100,20 @@ class DBCon:
         return self.fetch_cursor()
 
     # ===========================================================================================================
-    # SEARCH SALE BY SALE ID
+    # SEARCH X BY SALE ID
     # ===========================================================================================================
     def get_sale_from_id(self, sale_id):
         self.cursor.execute('''
         SELECT *
         FROM sale
+        WHERE sale_id=?
+        ''', (sale_id,))
+        return self.fetch_cursor()
+
+    def get_sale_items_from_id(self, sale_id):
+        self.cursor.execute('''
+        SELECT *
+        FROM sale_items
         WHERE sale_id=?
         ''', (sale_id,))
         return self.fetch_cursor()
