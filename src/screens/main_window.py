@@ -793,18 +793,24 @@ class Ui_MainWindow(object):
         self.layaway_label = QtWidgets.QLabel(self.layaway_page)
         self.layaway_label.setObjectName("layaway_label")
         self.layaway_vertical_layout.addWidget(self.layaway_label)
+
         self.layaway_text_browser_1 = QtWidgets.QTextBrowser(self.layaway_page)
         self.layaway_text_browser_1.setObjectName("layaway_text_browser_1")
+
         self.layaway_vertical_layout.addWidget(self.layaway_text_browser_1)
         self.layaway_label_2 = QtWidgets.QLabel(self.layaway_page)
         self.layaway_label_2.setObjectName("layaway_label_2")
         self.layaway_vertical_layout.addWidget(self.layaway_label_2)
+
+
         self.layaway_text_browser_2 = QtWidgets.QTextBrowser(self.layaway_page)
-        self.layaway_text_browser_2.setObjectName("layaway_text_browser_1_2")
+        self.layaway_text_browser_2.setObjectName("layaway_text_browser_2")
+
         self.layaway_vertical_layout.addWidget(self.layaway_text_browser_2)
         self.layaway_horizontal_layout_2.addLayout(self.layaway_vertical_layout)
         self.layaway_vertical_layout_2 = QtWidgets.QVBoxLayout()
         self.layaway_vertical_layout_2.setObjectName("layaway_vertical_layout_2")
+
         self.layaway_label_3 = QtWidgets.QLabel(self.layaway_page)
         self.layaway_label_3.setObjectName("layaway_label_3")
         self.layaway_vertical_layout_2.addWidget(self.layaway_label_3)

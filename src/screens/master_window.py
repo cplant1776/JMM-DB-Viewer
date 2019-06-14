@@ -22,7 +22,7 @@ class MasterWindow(Ui_MainWindow):
     # ===========================================================================================================
 
     def bind_buttons(self):
-        # self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='layaway'))
+        # self.search_btn.clicked.connect(partial(self.go_to_layaway, id=76))
         self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.serialized_btn.clicked.connect(partial(self.go_to_serialized_inventory))
         self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
@@ -51,6 +51,12 @@ class MasterWindow(Ui_MainWindow):
         self.fill_in_sale(id)
         # Go to sale page
         self.stackedWidget.go_to_screen(screen='sale')
+
+    def go_to_layaway(self, id):
+        # populate layaway page
+        self.fill_in_layaway(id)
+        # Go to sale page
+        self.stackedWidget.go_to_screen(screen='layaway')
 
     def go_to_customer_page(self):
         # Find selected row
@@ -306,6 +312,9 @@ class MasterWindow(Ui_MainWindow):
         self.sale_table_4.setItem(6, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['misc']]))
 
+    # ===========================================================================================================
+    # SALE PAGE POPULATION FUNCTIONS
+    # ===========================================================================================================
     def fill_in_sale_items(self, id):
         sale_items_data = self.db_con.get_sale_items_from_id(sale_id=id)
         self.sale_table_3.setRowCount(len(sale_items_data))
@@ -321,6 +330,45 @@ class MasterWindow(Ui_MainWindow):
             self.sale_table_3.setItem(row, 4,
                                    QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_total']])))
 
+    # ===========================================================================================================
+    # LAYAWAY PAGE POPULATION FUNCTIONS
+    # ===========================================================================================================
+    def fill_in_layaway(self, id):
+        layaway_data = self.db_con.get_layaway_from_id(layaway_id=id)[0]
+        # Fill in basic info
+        self.fill_layaway_basic_info(data=layaway_data)
+        # Fill in notes
+        pass
+        # Fill in transaction history
+        pass
+
+    def fill_layaway_basic_info(self, data):
+        # Layaway Table 1 - layaway id/customer id/name/start
+        self.layaway_table_1.setItem(0, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['layaway_id']]))
+        self.layaway_table_1.setItem(1, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['customer_id']]))
+        self.layaway_table_1.setItem(2, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['cust_name']]))
+        self.layaway_table_1.setItem(3, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['start_date']]))
+        # Layaway Table 2 - amt/pay recvd/balance due
+        self.layaway_table_2.setItem(0, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['layaway_amount']]))
+        self.layaway_table_2.setItem(1, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['payments_received']]))
+        self.layaway_table_2.setItem(2, 0,
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['balance_due']]))
+
+    def fill_layaway_notes(self, data):
+        # Fill initial notes
+        # self.layaway_text_browser_1.setText(data[SETTINGS['tuple_dicts']['layaway']['initial_notes']])
+        # Fill notes
+        # self.layaway_text_browser_1.setText(data[SETTINGS['tuple_dicts']['layaway']['notes']])
+        pass
+
+    def fill_transaction_history(self, data):
+        pass
 
 # ==============================================================
 # Main

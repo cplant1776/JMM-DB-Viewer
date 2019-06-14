@@ -119,6 +119,17 @@ class DBCon:
         return self.fetch_cursor()
 
     # ===========================================================================================================
+    # SEARCH X BY LAYAWAY ID
+    # ===========================================================================================================
+    def get_layaway_from_id(self, layaway_id):
+        self.cursor.execute('''
+        SELECT *
+        FROM layaway
+        WHERE layaway_id=?
+        ''', (layaway_id,))
+        return self.fetch_cursor()
+
+    # ===========================================================================================================
     # GENERAL SEARCH FUNCTIONS
     # ===========================================================================================================
     def run_general_query(self, query, query_type, term):

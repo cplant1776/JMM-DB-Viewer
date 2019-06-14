@@ -73,3 +73,17 @@ tuple_dicts:
     unit_price: 3
     item_discount_perc: 4
     item_total: 5
+  layaway:
+    layaway_id: 0
+    customer_id: 1
+    cust_name: 2
+    phone: 3
+    address: 4
+    start_date: 5
+    initial_notes: 6
+    notes: 7
+    account_balance: 8
+    layaway_amount: 9
+    payments_received: 10
+    balance_due: 11
+    transaction_history: 12
