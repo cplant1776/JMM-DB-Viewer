@@ -12,3 +12,9 @@ if __name__ == "__main__":
 
     app = App()
     sys.exit(app.app.exec_())
+
+
+# TODO
+# Add back button to transactions page
+# Add line-level details for transaction page
+#

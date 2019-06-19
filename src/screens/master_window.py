@@ -6,6 +6,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from src.config import SETTINGS
 from src.db_con import DBCon
 from src.screens.main_window import Ui_MainWindow
+from src.screens.screen_functions.stacked_widget_subclass import MyStackWidget
+
+
+# self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.centralwidget)
 
 
 class MasterWindow(Ui_MainWindow):
@@ -13,8 +17,10 @@ class MasterWindow(Ui_MainWindow):
     Extends the Ui_MainWindow class. Exists purely to separate the massive UI definition
     functions (setupUI and retranslateUi) from the UI interaction functions (button bindings, etc)
     """
+
     def __init__(self):
         super().__init__()
+        # Add database connection
         self.db_con = DBCon(db_loc=SETTINGS['local_database_path'])
 
     # ===========================================================================================================
@@ -251,19 +257,19 @@ class MasterWindow(Ui_MainWindow):
         self.work_text.setText(sro_data[SETTINGS['tuple_dicts']['sro']['work_performed']])
 
     def fill_sro_basic_info(self, data):
-        self.data_table_3.setItem(0, 0,
+        self.sro_basic_table.setItem(0, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['service_id']]))
-        self.data_table_3.setItem(1, 0,
+        self.sro_basic_table.setItem(1, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['customer_id']]))
-        self.data_table_3.setItem(2, 0,
+        self.sro_basic_table.setItem(2, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['make']]))
-        self.data_table_3.setItem(3, 0,
+        self.sro_basic_table.setItem(3, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['model']]))
-        self.data_table_3.setItem(4, 0,
+        self.sro_basic_table.setItem(4, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['date_in']]))
-        self.data_table_3.setItem(5, 0,
+        self.sro_basic_table.setItem(5, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['date_complete']]))
-        self.data_table_3.setItem(6, 0,
+        self.sro_basic_table.setItem(6, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sro']['picked_up']]))
 
     # ===========================================================================================================
@@ -369,6 +375,7 @@ class MasterWindow(Ui_MainWindow):
 
     def fill_transaction_history(self, data):
         pass
+
 
 # ==============================================================
 # Main

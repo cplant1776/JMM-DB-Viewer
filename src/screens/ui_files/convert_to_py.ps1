@@ -1,3 +1,4 @@
+# Convert main_window.ui to main_window.py
 $screens = Get-ChildItem -Name -Filter *.ui
 
 try {
@@ -8,8 +9,12 @@ try {
         $screen -match "(?<filename>.*)\."
         $out_file = "..\" + $matches['filename'] + ".py"
         # Convert .ui -> .py
-        ..\..\venv\Scripts\python.exe ..\..\venv\Scripts\pyuic5.exe -o $out_file $screen
+        ..\..\..\venv\Scripts\python.exe ..\..\..\venv\Scripts\pyuic5.exe -o $out_file $screen
     }
+
+    # Modify newly created main_window.py
+    python insert_custom_stacked_widget.py
+
     Read-Host -Prompt "Finished with no errors! Press Enter to exit."
 }
 
