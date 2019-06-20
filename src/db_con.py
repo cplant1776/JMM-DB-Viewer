@@ -78,6 +78,14 @@ class DBCon:
         ''', (id,))
         return self.fetch_cursor()
 
+    def layaway_search_by_cust_id(self, id):
+        self.cursor.execute('''
+        SELECT *
+        FROM layaway
+        WHERE customer_id=?
+        ''', (id,))
+        return self.fetch_cursor()
+
     # ===========================================================================================================
     # SERIALIZED INVENTORY SEARCH
     # ===========================================================================================================

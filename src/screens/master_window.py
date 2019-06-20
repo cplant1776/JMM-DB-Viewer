@@ -31,17 +31,23 @@ class MasterWindow(Ui_MainWindow):
         # self.search_btn.clicked.connect(partial(self.go_to_layaway, id=76))
         self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.serialized_btn.clicked.connect(partial(self.go_to_serialized_inventory))
-        self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
         self.submit_search_btn.clicked.connect(partial(self.run_search))
+
+        # Back buttons
+        self.back_btn_search_result.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
         self.back_btn_serial.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
         self.sro_back_btn.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
-        # self.layaway_btn.clicked.connect(self.run_search)
+        self.back_btn_sale.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
+        self.back_btn_customer.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search_result'))
+        self.back_btn_search.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='start'))
+        self.back_btn_layaway.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
 
     def bind_table_behavior(self):
         # Connect double click signal to function
         self.search_result_table.itemDoubleClicked.connect(self.go_to_item_page)
         self.sro_table.itemDoubleClicked.connect(self.go_to_sro_page)
         self.transactions_table.itemDoubleClicked.connect(self.go_to_sale_page)
+        self.layaways_table.itemDoubleClicked.connect(self.go_to_layaway_page)
 
     # ===========================================================================================================
     # GO TO PAGE X
@@ -97,6 +103,15 @@ class MasterWindow(Ui_MainWindow):
         print("Selected row: {} ==> sale id: {}".format(selected_row, sale_id))
         # Fill in destination page information and go to it
         self.go_to_sale(id=sale_id)
+
+    def go_to_layaway_page(self):
+        # Find selected row
+        selected_row = self.layaways_table.selectedItems()[0].row()
+        # Find sale id on selected row (1st col)
+        layaway_id = self.layaways_table.item(selected_row, 2).text()
+        print("Selected row: {} ==> layaway id: {}".format(selected_row, layaway_id))
+        # Fill in destination page information and go to it
+        self.go_to_layaway(id=layaway_id)
 
     # ===========================================================================================================
     # GENERAL FUNCTIONS
@@ -157,6 +172,8 @@ class MasterWindow(Ui_MainWindow):
         self.fill_in_cust_sro(id)
         # Fill in transactions
         self.fill_in_cust_sales(id)
+        # Fill in layaways
+        self.fill_in_cust_layaways(id)
         print("Populated cusotmer page")
 
     def fill_customer_page_basic_info_tables(self, customer_data):
@@ -226,6 +243,17 @@ class MasterWindow(Ui_MainWindow):
             self.transactions_table.setItem(row, 4,
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['sale_id']]))
 
+    def fill_in_cust_layaways(self, cust_id):
+        layaways = self.db_con.layaway_search_by_cust_id(cust_id)
+        self.layaways_table.setRowCount(len(layaways))
+        for row, s in enumerate(layaways):
+            self.layaways_table.setItem(row, 0,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['start_date']]))
+            self.layaways_table.setItem(row, 1,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['account_balance']]))
+            self.layaways_table.setItem(row, 2,
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]))
+
     # ===========================================================================================================
     # SERIALIZED INVENTORY POPULATION FUNCTIONS
     # ===========================================================================================================
@@ -283,39 +311,39 @@ class MasterWindow(Ui_MainWindow):
         self.fill_in_sale_items(id)
 
     def fill_sale_basic_info(self, data):
-        # Sale Table 1 - sale id/cust id/cust name
-        self.sale_table_1.setItem(0, 0,
+        # Sale basic info table - sale id/cust id/cust name/date/overcharged
+        self.sale_basic_info.setItem(0, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['sale_id']]))
-        self.sale_table_1.setItem(1, 0,
+        self.sale_basic_info.setItem(1, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['customer_id']]))
 
+        # Create customer name
         customer_info = self.db_con.search_by_customer_id(id=data[SETTINGS['tuple_dicts']['sale']['customer_id']])[0]
         first_name = customer_info[SETTINGS['tuple_dicts']['customer']['first_name']]
         last_name = customer_info[SETTINGS['tuple_dicts']['customer']['last_name']]
         customer_name = first_name + ' ' + last_name
-        self.sale_table_1.setItem(2, 0,
-                                  QtWidgets.QTableWidgetItem(customer_name))
 
-        # Sale Table 2 - date/overcharged?
-        self.sale_table_2.setItem(0, 0,
+        self.sale_basic_info.setItem(2, 0,
+                                  QtWidgets.QTableWidgetItem(customer_name))
+        self.sale_basic_info.setItem(3, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['sale_date']]))
-        self.sale_table_2.setItem(1, 0,
+        self.sale_basic_info.setItem(4, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['is_overring']]))
 
         # Sale Table 4 - subtotal/tax/total/cash/credit/debit/misc
-        self.sale_table_4.setItem(0, 0,
+        self.sale_totals.setItem(0, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['subtotal']]))
-        self.sale_table_4.setItem(1, 0,
+        self.sale_totals.setItem(1, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['tax']]))
-        self.sale_table_4.setItem(2, 0,
+        self.sale_totals.setItem(2, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['total']]))
-        self.sale_table_4.setItem(3, 0,
+        self.sale_totals.setItem(3, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['cash']]))
-        self.sale_table_4.setItem(4, 0,
+        self.sale_totals.setItem(4, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['credit']]))
-        self.sale_table_4.setItem(5, 0,
+        self.sale_totals.setItem(5, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['debit']]))
-        self.sale_table_4.setItem(6, 0,
+        self.sale_totals.setItem(6, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['misc']]))
 
     # ===========================================================================================================
@@ -323,18 +351,18 @@ class MasterWindow(Ui_MainWindow):
     # ===========================================================================================================
     def fill_in_sale_items(self, id):
         sale_items_data = self.db_con.get_sale_items_from_id(sale_id=id)
-        self.sale_table_3.setRowCount(len(sale_items_data))
+        self.sale_lines_table.setRowCount(len(sale_items_data))
         for row, s in enumerate(sale_items_data):
-            self.sale_table_3.setItem(row, 0,
-                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['description']])))
-            self.sale_table_3.setItem(row, 1,
+            self.sale_lines_table.setItem(row, 0,
                                    QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['quantity']])))
-            self.sale_table_3.setItem(row, 2,
+            self.sale_lines_table.setItem(row, 1,
                                    QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']])))
-            self.sale_table_3.setItem(row, 3,
+            self.sale_lines_table.setItem(row, 2,
                                    QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']])))
-            self.sale_table_3.setItem(row, 4,
+            self.sale_lines_table.setItem(row, 3,
                                    QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_total']])))
+            self.sale_lines_table.setItem(row, 4,
+                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['description']])))
 
     # ===========================================================================================================
     # LAYAWAY PAGE POPULATION FUNCTIONS
@@ -368,13 +396,12 @@ class MasterWindow(Ui_MainWindow):
 
     def fill_layaway_notes(self, data):
         # Fill initial notes
-        # self.layaway_text_browser_1.setText(data[SETTINGS['tuple_dicts']['layaway']['initial_notes']])
+        self.layaway_initial_notes_tbox.setText(data[SETTINGS['tuple_dicts']['layaway']['initial_notes']])
         # Fill notes
-        # self.layaway_text_browser_1.setText(data[SETTINGS['tuple_dicts']['layaway']['notes']])
-        pass
+        self.layaway_notes_tbox.setText(data[SETTINGS['tuple_dicts']['layaway']['notes']])
 
     def fill_transaction_history(self, data):
-        pass
+        self.layaway_transaction_history_tbox.setText(data[SETTINGS['tuple_dicts']['layaway']['transaction_history']])
 
 
 # ==============================================================
