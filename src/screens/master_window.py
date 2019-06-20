@@ -250,7 +250,7 @@ class MasterWindow(Ui_MainWindow):
             self.layaways_table.setItem(row, 0,
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['start_date']]))
             self.layaways_table.setItem(row, 1,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['account_balance']]))
+                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['balance_due']]))
             self.layaways_table.setItem(row, 2,
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]))
 
@@ -372,9 +372,9 @@ class MasterWindow(Ui_MainWindow):
         # Fill in basic info
         self.fill_layaway_basic_info(data=layaway_data)
         # Fill in notes
-        pass
+        self.fill_layaway_notes(data=layaway_data)
         # Fill in transaction history
-        pass
+        self.fill_transaction_history(data=layaway_data)
 
     def fill_layaway_basic_info(self, data):
         # Layaway Table 1 - layaway id/customer id/name/start
@@ -384,11 +384,9 @@ class MasterWindow(Ui_MainWindow):
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['customer_id']]))
         self.layaway_table_1.setItem(2, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['cust_name']]))
-        self.layaway_table_1.setItem(3, 0,
-                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['start_date']]))
-        # Layaway Table 2 - amt/pay recvd/balance due
+        # Layaway Table 2 - start date/pay recvd/balance due
         self.layaway_table_2.setItem(0, 0,
-                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['layaway_amount']]))
+                                  QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['start_date']]))
         self.layaway_table_2.setItem(1, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['layaway']['payments_received']]))
         self.layaway_table_2.setItem(2, 0,
