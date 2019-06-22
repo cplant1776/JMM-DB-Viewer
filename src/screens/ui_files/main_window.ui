@@ -130,40 +130,154 @@
              <property name="text">
               <string>id</string>
              </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Last</string>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
             </column>
             <column>
              <property name="text">
               <string>First</string>
              </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Last</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Address</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>City</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>State</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Zip</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
             </column>
             <column>
              <property name="text">
               <string>Home Phone</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
             </column>
             <column>
              <property name="text">
               <string>Work Phone</string>
              </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Company</string>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Last Active</string>
+              <string>Cell Phone</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
             </column>
             <column>
              <property name="text">
               <string>Added</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Last Activity</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Email</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Tax Exempt</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
             </column>
            </widget>

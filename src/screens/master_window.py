@@ -22,11 +22,12 @@ class MasterWindow(Ui_MainWindow):
         super().__init__()
         # Add database connection
         self.db_con = DBCon(db_loc=SETTINGS['local_database_path'])
+        # List of references to tables with dynamic behavior
+        self.dynamic_tables = []
 
     # ===========================================================================================================
-    # BINDINGS
+    # BUTTON BINDINGS
     # ===========================================================================================================
-
     def bind_buttons(self):
         # self.search_btn.clicked.connect(partial(self.go_to_layaway, id=76))
         self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
@@ -42,12 +43,47 @@ class MasterWindow(Ui_MainWindow):
         self.back_btn_search.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='start'))
         self.back_btn_layaway.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
 
+    # ===========================================================================================================
+    # TABLE BINDINGS
+    # ===========================================================================================================
     def bind_table_behavior(self):
         # Connect double click signal to function
         self.search_result_table.itemDoubleClicked.connect(self.go_to_item_page)
         self.sro_table.itemDoubleClicked.connect(self.go_to_sro_page)
         self.transactions_table.itemDoubleClicked.connect(self.go_to_sale_page)
         self.layaways_table.itemDoubleClicked.connect(self.go_to_layaway_page)
+
+        # List of references to tables with dynamic behavior
+        self.dynamic_tables = [self.sale_lines_table,
+                               self.layaways_table,
+                               self.transactions_table,
+                               self.sro_table,
+                               self.serial_table,
+                               self.search_result_table]
+        # Connect table header click signal to function
+        self.connect_table_header_behavior()
+
+    def connect_table_header_behavior(self):
+        for table in self.dynamic_tables:
+            # Initialize table sort order
+            table.sort_ascending = False
+            # Connect sort function to clicking header of column
+            table.horizontalHeader().sectionClicked.connect(partial(self.sort_table_by_col,
+                                                                    table))
+
+    @staticmethod
+    def sort_table_by_col(table):
+        # Get the selected column
+        selected_column = table.selectedItems()[0].column()
+        # Sort table by selected column. If already ascending, descend. If already descending, ascend.
+        if table.sort_ascending:
+            table.sortByColumn(selected_column, QtCore.Qt.AscendingOrder)
+            table.sort_ascending = False
+            print('Sorting ascending.')
+        else:
+            table.sortByColumn(selected_column, QtCore.Qt.DescendingOrder)
+            table.sort_ascending = True
+            print('Sorting descending.')
 
     # ===========================================================================================================
     # GO TO PAGE X
@@ -346,9 +382,6 @@ class MasterWindow(Ui_MainWindow):
         self.sale_totals.setItem(6, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['misc']]))
 
-    # ===========================================================================================================
-    # SALE PAGE POPULATION FUNCTIONS
-    # ===========================================================================================================
     def fill_in_sale_items(self, id):
         sale_items_data = self.db_con.get_sale_items_from_id(sale_id=id)
         self.sale_lines_table.setRowCount(len(sale_items_data))
