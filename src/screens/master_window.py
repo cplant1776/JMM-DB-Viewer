@@ -185,6 +185,7 @@ class MasterWindow(Ui_MainWindow):
             for row, r in enumerate(result):
                 for col, item in enumerate(r):
                     self.search_result_table.setItem(row, col, QtWidgets.QTableWidgetItem(item))
+        self.search_result_table.resizeColumnsToContents()
 
     def go_to_item_page(self):
         # Determine result type (customer/layaway/SRO/sale)
@@ -307,6 +308,7 @@ class MasterWindow(Ui_MainWindow):
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['date_received']]))
             self.serial_table.setItem(row, 4,
                                    QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['notes']]))
+        self.serial_table.resizeColumnsToContents()
 
     # ===========================================================================================================
     # SRO PAGE POPULATION FUNCTIONS
@@ -366,7 +368,7 @@ class MasterWindow(Ui_MainWindow):
         self.sale_basic_info.setItem(4, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['is_overring']]))
 
-        # Sale Table 4 - subtotal/tax/total/cash/credit/debit/misc
+        # Sale Totals - subtotal/tax/total/cash/credit/debit/misc
         self.sale_totals.setItem(0, 0,
                                   QtWidgets.QTableWidgetItem(data[SETTINGS['tuple_dicts']['sale']['subtotal']]))
         self.sale_totals.setItem(1, 0,
