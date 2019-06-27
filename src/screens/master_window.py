@@ -119,8 +119,8 @@ class MasterWindow(Ui_MainWindow):
         self.stackedWidget.go_to_screen('customer')
 
     def go_to_serialized_inventory(self):
-        self.fill_in_serialized_inventory()
         self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
+        self.fill_in_serialized_inventory()
 
     def go_to_sro_page(self):
         # Find selected row
