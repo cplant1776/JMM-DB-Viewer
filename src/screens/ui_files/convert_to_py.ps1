@@ -12,15 +12,14 @@ try {
         ..\..\..\venv\Scripts\python.exe ..\..\..\venv\Scripts\pyuic5.exe -o $out_file $screen
     }
 
-    # Modify newly created main_window.py
-    python insert_custom_stacked_widget.py
-
-    Read-Host -Prompt "Finished with no errors! Press Enter to exit."
+    Write-Host "Finished with no errors!"
+    # Read-Host -Prompt "Finished with no errors! Press Enter to exit."
 }
 
 catch {
 
     Write-Error $_.Exception.ToString()
-    Read-Host -Prompt "The above error occurred. Press Enter to exit."
+    Write-Host "The above error occurred."
+    # Read-Host -Prompt "The above error occurred. Press Enter to exit."
 
 }

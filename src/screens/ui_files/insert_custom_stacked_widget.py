@@ -1,5 +1,7 @@
 # Standard Library Imports
 import os.path
+import subprocess
+import sys
 # Third Party Imports
 # Local Imports
 
@@ -7,7 +9,20 @@ import os.path
 # Main
 # ==============================================================
 if __name__ == '__main__':
-    """Replace stackedWidget from ui generated main_window.py with modified version"""
+    """Converts ui file to py then replace stackedWidget from generated main_window.py with modified version"""
+
+    # ===========================
+    # Convert ui -> py
+    # ===========================
+    script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'convert_to_py.ps1')
+    # print(script_path)
+    p = subprocess.Popen(['powershell.exe', '-File', r'{}'.format(script_path)],
+                         stdout=sys.stdout, shell=True)
+    p.communicate()
+
+    # ===========================
+    # Insert custom stackedWidget
+    # ===========================
     # Read main_window.py into memory
     main_window_path = os.path.join('..', 'main_window.py')
     with open(main_window_path, 'r') as in_file:
