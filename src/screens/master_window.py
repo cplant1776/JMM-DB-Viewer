@@ -298,16 +298,16 @@ class MasterWindow(Ui_MainWindow):
         inventory = self.db_con.get_serialized_inventory()
         self.serial_table.setRowCount(len(inventory))
         for row, s in enumerate(inventory):
-            self.serial_table.setItem(row, 0,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['make']]))
-            self.serial_table.setItem(row, 1,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['model']]))
-            self.serial_table.setItem(row, 2,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['serial_num']]))
-            self.serial_table.setItem(row, 3,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['date_received']]))
-            self.serial_table.setItem(row, 4,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['notes']]))
+            item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['make']])
+            self.serial_table.setItem(row, 0, item)
+            item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['model']])
+            self.serial_table.setItem(row, 1, item)
+            item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['serial_num']])
+            self.serial_table.setItem(row, 2, item)
+            item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['date_received']])
+            self.serial_table.setItem(row, 3, item)
+            item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['notes']])
+            self.serial_table.setItem(row, 4, item)
         self.serial_table.resizeColumnsToContents()
 
     # ===========================================================================================================
@@ -388,16 +388,20 @@ class MasterWindow(Ui_MainWindow):
         sale_items_data = self.db_con.get_sale_items_from_id(sale_id=id)
         self.sale_lines_table.setRowCount(len(sale_items_data))
         for row, s in enumerate(sale_items_data):
-            self.sale_lines_table.setItem(row, 0,
-                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['quantity']])))
-            self.sale_lines_table.setItem(row, 1,
-                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']])))
-            self.sale_lines_table.setItem(row, 2,
-                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']])))
-            self.sale_lines_table.setItem(row, 3,
-                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_total']])))
-            self.sale_lines_table.setItem(row, 4,
-                                   QtWidgets.QTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['description']])))
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['quantity']]),
+                                     sort_key=int(s[SETTINGS['tuple_dicts']['sale_items']['quantity']]))
+            self.sale_lines_table.setItem(row, 0, item)
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']]),
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']]))
+            self.sale_lines_table.setItem(row, 1, item)
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']]),
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']]))
+            self.sale_lines_table.setItem(row, 2, item)
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_total']]),
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['item_total']]))
+            self.sale_lines_table.setItem(row, 3, item)
+            item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['sale_items']['description']])
+            self.sale_lines_table.setItem(row, 4, item)
 
     # ===========================================================================================================
     # LAYAWAY PAGE POPULATION FUNCTIONS
@@ -438,6 +442,23 @@ class MasterWindow(Ui_MainWindow):
 
 
 # ==============================================================
+# Override Default QTableWidgetItem
+# ==============================================================
+class MyTableWidgetItem(QtWidgets.QTableWidgetItem):
+    """Adds a sort key argument to QTableWidgetItem so items can be sorted by non-displayed attribute"""
+    def __init__(self, text, sort_key=None):
+            QtWidgets.QTableWidgetItem.__init__(self, text, QtWidgets.QTableWidgetItem.UserType)
+            if sort_key:
+                self.sort_key = sort_key
+            else:
+                self.sort_key = str(text)
+
+    def __lt__(self, other):
+        """Override default less than method"""
+        return self.sort_key < other.sort_key
+
+
+    # ==============================================================
 # Main
 # ==============================================================
 if __name__ == '__main__':
