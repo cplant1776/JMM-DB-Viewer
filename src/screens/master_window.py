@@ -1,5 +1,6 @@
 # Standard Library Imports
 from functools import partial
+from datetime import datetime
 # Third Party Imports
 from PyQt5 import QtCore, QtGui, QtWidgets
 # Local Imports
@@ -154,13 +155,7 @@ class MasterWindow(Ui_MainWindow):
     # ===========================================================================================================
     def run_search(self):
         # Run appropriate query and store result
-        is_general_search = False
-        if self.general_radio.isChecked():
-            term = (self.general_search.text(),)
-            print("General search: {}".format(term[0]))
-            result = self.db_con.general_search(term)
-            is_general_search = True
-        elif self.first_radio.isChecked():
+        if self.first_radio.isChecked():
             first = self.first_search.text()
             print("First name search: {}".format(first))
             result = self.db_con.search_by_first_name(first)
@@ -173,18 +168,53 @@ class MasterWindow(Ui_MainWindow):
             print("Phone search: {}".format(num))
             result = self.db_con.search_by_number(num)
 
-        self.populate_search_result(result=result, is_general_search=is_general_search)
+        self.populate_search_result(result=result)
         self.stackedWidget.go_to_screen(screen='search_result')
 
-    def populate_search_result(self, result, is_general_search=False):
-        if is_general_search:
-            # TODO: Implement general result screen for deciding which data to list
-            pass
-        else:
-            self.search_result_table.setRowCount(len(result))
-            for row, r in enumerate(result):
-                for col, item in enumerate(r):
-                    self.search_result_table.setItem(row, col, QtWidgets.QTableWidgetItem(item))
+    def populate_search_result(self, result):
+        self.search_result_table.setRowCount(len(result))
+        for row, r in enumerate(result):
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['customer_id']]),
+                                     sort_key=int(r[SETTINGS['tuple_dicts']['customer']['customer_id']]))
+            self.search_result_table.setItem(row, 0, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['first_name']]))
+            self.search_result_table.setItem(row, 1, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['last_name']]))
+            self.search_result_table.setItem(row, 2, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['address']]))
+            self.search_result_table.setItem(row, 3, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['city']]))
+            self.search_result_table.setItem(row, 4, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['state']]))
+            self.search_result_table.setItem(row, 5, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['zip']]))
+            self.search_result_table.setItem(row, 6, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['home_phone']]))
+            self.search_result_table.setItem(row, 7, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['work_phone']]))
+            self.search_result_table.setItem(row, 8, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['cell_phone']]))
+            self.search_result_table.setItem(row, 9, item)
+
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['added']]),
+                                         sort_key=datetime.strptime(r[SETTINGS['tuple_dicts']['customer']['added']],
+                                         "%m/%d/%Y"))
+                self.search_result_table.setItem(row, 10, item)
+            except TypeError:
+                pass
+
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['last_activity']]),
+                                         sort_key=datetime.strptime(r[SETTINGS['tuple_dicts']['customer']['last_activity']],
+                                                                    "%m/%d/%Y"))
+                self.search_result_table.setItem(row, 11, item)
+            except TypeError:
+                pass
+
+        # for row, r in enumerate(result):
+        #     for col, item in enumerate(r):
+        #         self.search_result_table.setItem(row, col, QtWidgets.QTableWidgetItem(item))
         self.search_result_table.resizeColumnsToContents()
 
     def go_to_item_page(self):
@@ -252,44 +282,83 @@ class MasterWindow(Ui_MainWindow):
         orders = self.db_con.sro_search_by_cust_id(cust_id)
         self.sro_table.setRowCount(len(orders))
         for row, r in enumerate(orders):
-            self.sro_table.setItem(row, 0,
-                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['date_in']])))
-            self.sro_table.setItem(row, 1,
-                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['date_complete']])))
-            self.sro_table.setItem(row, 2,
-                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['picked_up']])))
-            self.sro_table.setItem(row, 3,
-                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['make']])))
-            self.sro_table.setItem(row, 4,
-                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['model']])))
-            self.sro_table.setItem(row, 5,
-                                   QtWidgets.QTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['service_id']])))
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['date_in']]),
+                                         sort_key=datetime.strptime(r[SETTINGS['tuple_dicts']['sro']['date_in']],
+                                         "%m/%d/%Y"))
+                self.sro_table.setItem(row, 0, item)
+            except TypeError:
+                pass
+
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['date_complete']]),
+                                         sort_key=datetime.strptime(r[SETTINGS['tuple_dicts']['sro']['date_complete']],
+                                                                    "%m/%d/%Y"))
+                self.sro_table.setItem(row, 1, item)
+            except TypeError:
+                pass
+
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['picked_up']]),
+                                         sort_key=datetime.strptime(r[SETTINGS['tuple_dicts']['sro']['picked_up']],
+                                         "%m/%d/%Y"))
+                self.sro_table.setItem(row, 2, item)
+            except TypeError:
+                pass
+
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['make']]))
+            self.sro_table.setItem(row, 3, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['model']]))
+            self.sro_table.setItem(row, 4, item)
+            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['sro']['service_id']]),
+                                     sort_key=int(r[SETTINGS['tuple_dicts']['sro']['service_id']]))
+            self.sro_table.setItem(row, 5, item)
+
 
     def fill_in_cust_sales(self, cust_id):
         sales = self.db_con.sale_search_by_cust_id(cust_id)
         self.transactions_table.setRowCount(len(sales))
         for row, s in enumerate(sales):
-            self.transactions_table.setItem(row, 0,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['sale_date']]))
-            self.transactions_table.setItem(row, 1,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['subtotal']]))
-            self.transactions_table.setItem(row, 2,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['tax']]))
-            self.transactions_table.setItem(row, 3,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['total']]))
-            self.transactions_table.setItem(row, 4,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['sale']['sale_id']]))
+
+            try:
+                item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['sale_date']]),
+                                         sort_key=datetime.strptime(s[SETTINGS['tuple_dicts']['layaway']['sale_date']],
+                                                                    "%m/%d/%Y"))
+                self.transactions_table.setItem(row, 0, item)
+            except TypeError:
+                pass
+
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['subtotal']]),
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['subtotal']]))
+            self.transactions_table.setItem(row, 1, item)
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['tax']]),
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['tax']]))
+            self.transactions_table.setItem(row, 2, item)
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['total']]),
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['total']]))
+            self.transactions_table.setItem(row, 3, item)
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['sale_id']]),
+                                     sort_key=int(s[SETTINGS['tuple_dicts']['layaway']['sale_id']]))
+            self.transactions_table.setItem(row, 4, item)
+
 
     def fill_in_cust_layaways(self, cust_id):
         layaways = self.db_con.layaway_search_by_cust_id(cust_id)
         self.layaways_table.setRowCount(len(layaways))
         for row, s in enumerate(layaways):
-            self.layaways_table.setItem(row, 0,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['start_date']]))
-            self.layaways_table.setItem(row, 1,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['balance_due']]))
-            self.layaways_table.setItem(row, 2,
-                                   QtWidgets.QTableWidgetItem(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]))
+            try:
+                item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['layaway']['start_date']]),
+                                         sort_key=datetime.strptime(s[SETTINGS['tuple_dicts']['layaway']['start_date']],
+                                                                    "%m/%d/%Y"))
+                self.layaways_table.setItem(row, 0, item)
+            except TypeError:
+                pass
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['layaway']['balance_due']]),
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['balance_due']]))
+            self.layaways_table.setItem(row, 1, item)
+            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]),
+                                     sort_key=int(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]))
+            self.layaways_table.setItem(row, 2, item)
 
     # ===========================================================================================================
     # SERIALIZED INVENTORY POPULATION FUNCTIONS
@@ -304,8 +373,16 @@ class MasterWindow(Ui_MainWindow):
             self.serial_table.setItem(row, 1, item)
             item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['serial_num']])
             self.serial_table.setItem(row, 2, item)
-            item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['date_received']])
-            self.serial_table.setItem(row, 3, item)
+            # Pass if date empty
+            try:
+                item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['date_received']],
+                                         sort_key=datetime.strptime(s[SETTINGS['tuple_dicts']['serial']['date_received']],
+                                         "%m/%d/%Y"))
+                print("{} | {}".format(item.text, item.sort_key))
+                self.serial_table.setItem(row, 3, item)
+            except TypeError:
+                pass
+
             item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['notes']])
             self.serial_table.setItem(row, 4, item)
         self.serial_table.resizeColumnsToContents()

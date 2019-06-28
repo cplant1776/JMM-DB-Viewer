@@ -27,6 +27,7 @@ tuple_dicts:
     home_phone: 7
     work_phone: 8
     cell_phone: 9
+    added: 10
     last_activity: 11
     email: 12
     notes: 14
