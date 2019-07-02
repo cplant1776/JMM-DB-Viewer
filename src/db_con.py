@@ -1,4 +1,5 @@
 # Standard Library Imports
+import re
 # Third Party Imports
 import sqlite3
 # Local Imports
@@ -24,31 +25,48 @@ class DBCon:
     def fetch_cursor(self):
         return self.cursor.fetchall()
 
+    @staticmethod
+    def extract_phone_number(num=""):
+        raw_num = re.sub('[^\d]', '', num)
+        if len(raw_num) < 10:
+            print("Invalid phone number - too short: {}".format(raw_num))
+            return "0" * 10
+        else:
+            return raw_num
+
     # ===========================================================================================================
     # SEARCH CUSTOMER BY X
     # ===========================================================================================================
     def search_by_number(self, number):
+        number = self.extract_phone_number(number)
         self.cursor.execute('''
         SELECT *
         FROM customer
-        WHERE cell_phone=? OR home_phone=? OR work_phone=?
-        ''', (number, number, number))
+        WHERE
+        cell_phone LIKE ?
+        OR home_phone LIKE ?
+        OR work_phone LIKE ?
+        ''', ('%'+number+'%', '%'+number+'%', '%'+number+'%'))
         return self.fetch_cursor()
 
     def search_by_first_name(self, name):
+        name = name.upper()
         self.cursor.execute('''
         SELECT *
         FROM customer
-        WHERE first_name=?
-        ''', (name,))
+        WHERE first_name
+        LIKE ?
+        ''', ('%'+name.upper()+'%',))
         return self.fetch_cursor()
 
     def search_by_last_name(self, name):
+        name = name.upper()
         self.cursor.execute('''
         SELECT *
         FROM customer
-        WHERE last_name=?
-        ''', (name,))
+        WHERE last_name
+        LIKE ?
+        ''', ('%'+name.upper()+'%',))
         return self.fetch_cursor()
 
     def search_by_customer_id(self, id):
@@ -138,7 +156,7 @@ class DBCon:
         return self.fetch_cursor()
 
     # ===========================================================================================================
-    # GENERAL SEARCH FUNCTIONS
+    # GENERAL SEARCH FUNCTIONS - Unimplemented. Not worth time.
     # ===========================================================================================================
     def run_general_query(self, query, query_type, term):
         print("Executing: {}".format(query))
@@ -168,21 +186,3 @@ class GeneralResult:
 
     def get_query_type(self):
         return self.query_type
-
-
-
-# # Never do this -- insecure!
-# symbol = 'RHAT'
-# c.execute("SELECT * FROM stocks WHERE symbol = '%s'" % symbol)
-#
-# # Do this instead
-# t = ('RHAT',)
-# c.execute('SELECT * FROM stocks WHERE symbol=?', t)
-# print(c.fetchone())
-#
-# # Larger example that inserts many records at a time
-# purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-#              ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-#              ('2006-04-06', 'SELL', 'IBM', 500, 53.00),
-#             ]
-# c.executemany('INSERT INTO stocks VALUES (?,?,?,?,?)', purchases)

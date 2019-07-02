@@ -1,5 +1,5 @@
 # Which Sqlite DB to connect to
-local_database_path: jmm_db.db
+local_database_path: jmm_db_current.db
 # Queries used when running a general search
 general_search_query:
   number:

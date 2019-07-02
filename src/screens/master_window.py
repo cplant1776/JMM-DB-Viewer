@@ -32,7 +32,7 @@ class MasterWindow(Ui_MainWindow):
     def bind_buttons(self):
         # self.search_btn.clicked.connect(partial(self.go_to_layaway, id=76))
         self.search_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search'))
-        self.serialized_btn.clicked.connect(partial(self.go_to_serialized_inventory))
+        self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
         self.submit_search_btn.clicked.connect(partial(self.run_search))
 
         # Back buttons
@@ -74,8 +74,11 @@ class MasterWindow(Ui_MainWindow):
 
     @staticmethod
     def sort_table_by_col(table):
-        # Get the selected column
-        selected_column = table.selectedItems()[0].column()
+        try:
+            # Get the selected column
+            selected_column = table.selectedItems()[0].column()
+        except IndexError:
+            return
         # Sort table by selected column. If already ascending, descend. If already descending, ascend.
         if table.sort_ascending:
             table.sortByColumn(selected_column, QtCore.Qt.AscendingOrder)
@@ -108,8 +111,11 @@ class MasterWindow(Ui_MainWindow):
         self.stackedWidget.go_to_screen(screen='layaway')
 
     def go_to_customer_page(self):
-        # Find selected row
-        selected_row = self.search_result_table.selectedItems()[0].row()
+        try:
+            # Find selected row
+            selected_row = self.search_result_table.selectedItems()[0].row()
+        except IndexError:
+            return
         print("selected row: {}".format(selected_row))
         # Find customer id on selected row (1st col)
         cust_id = self.search_result_table.item(selected_row, 0).text()
@@ -119,13 +125,12 @@ class MasterWindow(Ui_MainWindow):
         # Go to destination page
         self.stackedWidget.go_to_screen('customer')
 
-    def go_to_serialized_inventory(self):
-        self.serialized_btn.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='serial'))
-        self.fill_in_serialized_inventory()
-
     def go_to_sro_page(self):
-        # Find selected row
-        selected_row = self.sro_table.selectedItems()[0].row()
+        try:
+            # Find selected row
+            selected_row = self.sro_table.selectedItems()[0].row()
+        except IndexError:
+            return
         # Find sro id on selected row (1st col)
         sro_id = self.sro_table.item(selected_row, 5).text()
         print("Selected row: {} ==> SRO id: {}".format(selected_row, sro_id))
@@ -133,8 +138,11 @@ class MasterWindow(Ui_MainWindow):
         self.go_to_sro(id=sro_id)
 
     def go_to_sale_page(self):
-        # Find selected row
-        selected_row = self.transactions_table.selectedItems()[0].row()
+        try:
+            # Find selected row
+            selected_row = self.transactions_table.selectedItems()[0].row()
+        except IndexError:
+            return
         # Find sale id on selected row (1st col)
         sale_id = self.transactions_table.item(selected_row, 4).text()
         print("Selected row: {} ==> sale id: {}".format(selected_row, sale_id))
@@ -142,8 +150,11 @@ class MasterWindow(Ui_MainWindow):
         self.go_to_sale(id=sale_id)
 
     def go_to_layaway_page(self):
-        # Find selected row
-        selected_row = self.layaways_table.selectedItems()[0].row()
+        try:
+            # Find selected row
+            selected_row = self.layaways_table.selectedItems()[0].row()
+        except IndexError:
+            return
         # Find sale id on selected row (1st col)
         layaway_id = self.layaways_table.item(selected_row, 2).text()
         print("Selected row: {} ==> layaway id: {}".format(selected_row, layaway_id))
@@ -174,27 +185,57 @@ class MasterWindow(Ui_MainWindow):
     def populate_search_result(self, result):
         self.search_result_table.setRowCount(len(result))
         for row, r in enumerate(result):
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['customer_id']]),
-                                     sort_key=int(r[SETTINGS['tuple_dicts']['customer']['customer_id']]))
-            self.search_result_table.setItem(row, 0, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['first_name']]))
-            self.search_result_table.setItem(row, 1, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['last_name']]))
-            self.search_result_table.setItem(row, 2, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['address']]))
-            self.search_result_table.setItem(row, 3, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['city']]))
-            self.search_result_table.setItem(row, 4, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['state']]))
-            self.search_result_table.setItem(row, 5, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['zip']]))
-            self.search_result_table.setItem(row, 6, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['home_phone']]))
-            self.search_result_table.setItem(row, 7, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['work_phone']]))
-            self.search_result_table.setItem(row, 8, item)
-            item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['cell_phone']]))
-            self.search_result_table.setItem(row, 9, item)
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['customer_id']]),
+                                         sort_key=int(r[SETTINGS['tuple_dicts']['customer']['customer_id']]))
+                self.search_result_table.setItem(row, 0, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['first_name']]))
+                self.search_result_table.setItem(row, 1, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['last_name']]))
+                self.search_result_table.setItem(row, 2, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['address']]))
+                self.search_result_table.setItem(row, 3, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['city']]))
+                self.search_result_table.setItem(row, 4, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['state']]))
+                self.search_result_table.setItem(row, 5, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['zip']]))
+                self.search_result_table.setItem(row, 6, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['home_phone']]))
+                self.search_result_table.setItem(row, 7, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['work_phone']]))
+                self.search_result_table.setItem(row, 8, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['cell_phone']]))
+                self.search_result_table.setItem(row, 9, item)
+            except TypeError:
+                pass
 
             try:
                 item = MyTableWidgetItem(str(r[SETTINGS['tuple_dicts']['customer']['added']]),
@@ -322,25 +363,24 @@ class MasterWindow(Ui_MainWindow):
 
             try:
                 item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['sale_date']]),
-                                         sort_key=datetime.strptime(s[SETTINGS['tuple_dicts']['layaway']['sale_date']],
+                                         sort_key=datetime.strptime(s[SETTINGS['tuple_dicts']['sale']['sale_date']],
                                                                     "%m/%d/%Y"))
                 self.transactions_table.setItem(row, 0, item)
             except TypeError:
                 pass
 
             item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['subtotal']]),
-                                     sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['subtotal']]))
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale']['subtotal']]))
             self.transactions_table.setItem(row, 1, item)
             item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['tax']]),
-                                     sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['tax']]))
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale']['tax']]))
             self.transactions_table.setItem(row, 2, item)
             item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['total']]),
-                                     sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['total']]))
+                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale']['total']]))
             self.transactions_table.setItem(row, 3, item)
             item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale']['sale_id']]),
-                                     sort_key=int(s[SETTINGS['tuple_dicts']['layaway']['sale_id']]))
+                                     sort_key=int(s[SETTINGS['tuple_dicts']['sale']['sale_id']]))
             self.transactions_table.setItem(row, 4, item)
-
 
     def fill_in_cust_layaways(self, cust_id):
         layaways = self.db_con.layaway_search_by_cust_id(cust_id)
@@ -353,12 +393,19 @@ class MasterWindow(Ui_MainWindow):
                 self.layaways_table.setItem(row, 0, item)
             except TypeError:
                 pass
-            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['layaway']['balance_due']]),
-                                     sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['balance_due']]))
-            self.layaways_table.setItem(row, 1, item)
-            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]),
-                                     sort_key=int(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]))
-            self.layaways_table.setItem(row, 2, item)
+            try:
+
+                item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['layaway']['balance_due']]),
+                                         sort_key=float(s[SETTINGS['tuple_dicts']['layaway']['balance_due']]))
+                self.layaways_table.setItem(row, 1, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]),
+                                         sort_key=int(s[SETTINGS['tuple_dicts']['layaway']['layaway_id']]))
+                self.layaways_table.setItem(row, 2, item)
+            except TypeError:
+                pass
 
     # ===========================================================================================================
     # SERIALIZED INVENTORY POPULATION FUNCTIONS
@@ -378,7 +425,7 @@ class MasterWindow(Ui_MainWindow):
                 item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['serial']['date_received']],
                                          sort_key=datetime.strptime(s[SETTINGS['tuple_dicts']['serial']['date_received']],
                                          "%m/%d/%Y"))
-                print("{} | {}".format(item.text, item.sort_key))
+                # print("{} | {}".format(item.text, item.sort_key))
                 self.serial_table.setItem(row, 3, item)
             except TypeError:
                 pass
@@ -465,21 +512,35 @@ class MasterWindow(Ui_MainWindow):
         sale_items_data = self.db_con.get_sale_items_from_id(sale_id=id)
         self.sale_lines_table.setRowCount(len(sale_items_data))
         for row, s in enumerate(sale_items_data):
-            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['quantity']]),
-                                     sort_key=int(s[SETTINGS['tuple_dicts']['sale_items']['quantity']]))
-            self.sale_lines_table.setItem(row, 0, item)
-            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']]),
-                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']]))
-            self.sale_lines_table.setItem(row, 1, item)
-            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']]),
-                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']]))
-            self.sale_lines_table.setItem(row, 2, item)
-            item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_total']]),
-                                     sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['item_total']]))
-            self.sale_lines_table.setItem(row, 3, item)
-            item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['sale_items']['description']])
-            self.sale_lines_table.setItem(row, 4, item)
-
+            try:
+                item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['quantity']]),
+                                         sort_key=int(s[SETTINGS['tuple_dicts']['sale_items']['quantity']]))
+                self.sale_lines_table.setItem(row, 0, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']]),
+                                         sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['unit_price']]))
+                self.sale_lines_table.setItem(row, 1, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']]),
+                                         sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['item_discount_perc']]))
+                self.sale_lines_table.setItem(row, 2, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(str(s[SETTINGS['tuple_dicts']['sale_items']['item_total']]),
+                                         sort_key=float(s[SETTINGS['tuple_dicts']['sale_items']['item_total']]))
+                self.sale_lines_table.setItem(row, 3, item)
+            except TypeError:
+                pass
+            try:
+                item = MyTableWidgetItem(s[SETTINGS['tuple_dicts']['sale_items']['description']])
+                self.sale_lines_table.setItem(row, 4, item)
+            except TypeError:
+                pass
     # ===========================================================================================================
     # LAYAWAY PAGE POPULATION FUNCTIONS
     # ===========================================================================================================
@@ -532,10 +593,15 @@ class MyTableWidgetItem(QtWidgets.QTableWidgetItem):
 
     def __lt__(self, other):
         """Override default less than method"""
+        if self.sort_key == '0' or self.sort_key == '0.0' or self.sort_key == 0:
+            self.sort_key = float(0)
+        if other.sort_key == '0' or other.sort_key == '0.0' or other.sort_key == 0:
+            other.sort_key = float(0)
+        print("{}, {} | {}, {}".format(self.sort_key, type(self.sort_key), other.sort_key, type(other.sort_key)))
         return self.sort_key < other.sort_key
 
 
-    # ==============================================================
+# ==============================================================
 # Main
 # ==============================================================
 if __name__ == '__main__':

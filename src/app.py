@@ -18,6 +18,7 @@ class App:
         main_window = QtWidgets.QMainWindow()
         ui = MasterWindow()
         ui.setupUi(main_window)
+        ui.fill_in_serialized_inventory()
         ui.bind_buttons()
         ui.bind_table_behavior()
         return main_window
