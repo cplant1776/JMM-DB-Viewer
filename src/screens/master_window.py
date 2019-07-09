@@ -10,9 +10,6 @@ from src.screens.main_window import Ui_MainWindow
 from src.screens.screen_functions.stacked_widget_subclass import MyStackWidget
 
 
-# self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.centralwidget)
-
-
 class MasterWindow(Ui_MainWindow):
     """
     Extends the Ui_MainWindow class. Exists purely to separate the massive UI definition
@@ -43,6 +40,14 @@ class MasterWindow(Ui_MainWindow):
         self.back_btn_customer.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='search_result'))
         self.back_btn_search.clicked.connect(partial(self.stackedWidget.go_to_screen, screen='start'))
         self.back_btn_layaway.clicked.connect(partial(self.stackedWidget.go_to_previous_screen))
+
+    # ===========================================================================================================
+    # LINE EDIT BINDINGS
+    # ===========================================================================================================
+    def bind_line_edits(self):
+        self.first_search.returnPressed.connect(partial(self.run_first_name_search))
+        self.last_search.returnPressed.connect(partial(self.run_last_name_search))
+        self.phone_search.returnPressed.connect(partial(self.run_phone_search))
 
     # ===========================================================================================================
     # TABLE BINDINGS
@@ -162,26 +167,46 @@ class MasterWindow(Ui_MainWindow):
         self.go_to_layaway(id=layaway_id)
 
     # ===========================================================================================================
-    # GENERAL FUNCTIONS
+    # SEARCH FUNCTIONS
     # ===========================================================================================================
     def run_search(self):
         # Run appropriate query and store result
         if self.first_radio.isChecked():
-            first = self.first_search.text()
+            self.run_first_name_search()
+        elif self.last_radio.isChecked():
+            self.run_last_name_search()
+        elif self.phone_radio.isChecked():
+            self.run_phone_search()
+        else:
+            return
+
+    def run_first_name_search(self):
+        first = self.first_search.text()
+        if first != '':
             print("First name search: {}".format(first))
             result = self.db_con.search_by_first_name(first)
-        elif self.last_radio.isChecked():
-            last = self.last_search.text()
+            self.populate_search_result(result=result)
+            self.stackedWidget.go_to_screen(screen='search_result')
+
+    def run_last_name_search(self):
+        last = self.last_search.text()
+        if last != '':
             print("Last name search: {}".format(last))
             result = self.db_con.search_by_last_name(last)
-        elif self.phone_radio.isChecked():
-            num = self.phone_search.text()
+            self.populate_search_result(result=result)
+            self.stackedWidget.go_to_screen(screen='search_result')
+
+    def run_phone_search(self):
+        num = self.phone_search.text()
+        if num != '':
             print("Phone search: {}".format(num))
             result = self.db_con.search_by_number(num)
+            self.populate_search_result(result=result)
+            self.stackedWidget.go_to_screen(screen='search_result')
 
-        self.populate_search_result(result=result)
-        self.stackedWidget.go_to_screen(screen='search_result')
-
+    # ===========================================================================================================
+    # GENERAL FUNCTIONS
+    # ===========================================================================================================
     def populate_search_result(self, result):
         self.search_result_table.setRowCount(len(result))
         for row, r in enumerate(result):

@@ -20,6 +20,7 @@ class App:
         ui.setupUi(main_window)
         ui.fill_in_serialized_inventory()
         ui.bind_buttons()
+        ui.bind_line_edits()
         ui.bind_table_behavior()
         return main_window
 

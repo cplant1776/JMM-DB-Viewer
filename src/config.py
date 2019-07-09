@@ -14,8 +14,14 @@ def import_config_settings() -> dict:
         with open('config.yaml', 'r') as f:
             result = load(f, Loader=FullLoader)
     except FileNotFoundError:
-        with open(join('..', '..', 'config.yaml'), 'r') as f:
-            result = load(f, Loader=FullLoader)
+
+        try:
+            with open(join('..', 'config.yaml'), 'r') as f:
+                result = load(f, Loader=FullLoader)
+        except FileNotFoundError:
+
+            with open(join('..', '..', 'config.yaml'), 'r') as f:
+                result = load(f, Loader=FullLoader)
     return result
 
 
